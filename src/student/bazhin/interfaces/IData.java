@@ -1,4 +1,6 @@
 package student.bazhin.interfaces;
 
-public interface IData {
+import java.io.Serializable;
+
+public interface IData extends Serializable {
 }

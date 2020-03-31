@@ -1,4 +1,0 @@
-Scada 1
-Scada 2
-Scada 3
-Scada 4

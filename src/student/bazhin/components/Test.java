@@ -2,16 +2,16 @@ package student.bazhin.components;
 
 import student.bazhin.core.Core;
 import student.bazhin.core.View;
+import student.bazhin.interfaces.IData;
 import student.bazhin.interfaces.IVisualComponent;
-import student.bazhin.data.ScadaProjectData;
 
 import javax.swing.*;
 
-public class TestComponent implements IVisualComponent {
+public class Test implements IVisualComponent {
 
     int type;
 
-    public TestComponent(int type) {
+    public Test(int type) {
         this.type = type;
     }
 
@@ -22,7 +22,7 @@ public class TestComponent implements IVisualComponent {
     }
 
     @Override
-    public ScadaProjectData perform() {
+    public IData perform() {
         render(Core.getInstance().getView());
         return null;
     }
