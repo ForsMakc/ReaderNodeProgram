@@ -1,6 +1,8 @@
 package student.bazhin.data;
 
-public class AuthData {
+import java.io.Serializable;
+
+public class AuthData implements Serializable {
     protected String login;
     protected String password;
 

@@ -28,10 +28,10 @@ public class View extends JFrame {
         invalidate();
     }
 
-    public void addButton(JButton b, JPanel panel) {
-        panel.add(b);
-//        topJScrollPain.revalidate();
-//        bottomJScrollPain.revalidate();
+    public void addComponent(JComponent c, JPanel panel) {
+        panel.add(c);
+        revalidate();
+        repaint();
     }
 
     public JPanel getTopPanel() {
@@ -69,6 +69,7 @@ public class View extends JFrame {
         topPanel = new JPanel();
         topPanel.setLayout(new GridLayout(0, 1, 5, 12));
         bottomPanel = new JPanel();
+        bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
 
         topJScrollPain = new JScrollPane(topPanel);
         bottomJScrollPain = new JScrollPane(bottomPanel);
@@ -85,4 +86,5 @@ public class View extends JFrame {
 //        }
 //        topJScrollPain.revalidate();
     }
+
 }

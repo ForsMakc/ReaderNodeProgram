@@ -1,7 +1,8 @@
 package student.bazhin.core;
 
+import student.bazhin.data.AScadaProjectData;
 import student.bazhin.data.MasterScada3ProjectData;
-import student.bazhin.interfaces.IScadaProjectData;
+import student.bazhin.data.NewScadaProjectData;
 import student.bazhin.interfaces.IVisual;
 
 import java.io.*;
@@ -10,24 +11,23 @@ import java.util.ArrayList;
 public class Storage implements IVisual {
 
     protected final String STORAGE_FILE_PATH = "res/scada.ser";
-    protected ArrayList<IScadaProjectData> spdStorage;
+    protected ArrayList<AScadaProjectData> spdStorage;
 
     public Storage() {
         spdStorage = new ArrayList<>();
-//        insertScadaProject(new MasterScada3ProjectData(1));
-//        insertScadaProject(new MasterScada3ProjectData(2));
-//        insertScadaProject(new MasterScada3ProjectData(3));
-//        insertScadaProject(new MasterScada3ProjectData(4));
+        insertScadaProject(new MasterScada3ProjectData(1,true));
+        insertScadaProject(new NewScadaProjectData(1,100,false));
+        insertScadaProject(new MasterScada3ProjectData(2,false));
         refresh();
     }
 
-    public void insertScadaProject(IScadaProjectData scadaProjectData) {
+    public void insertScadaProject(AScadaProjectData scadaProjectData) {
         spdStorage.add(scadaProjectData);
         serialize();
         refresh();
     }
 
-    public void removeScadaProject(IScadaProjectData scadaProjectData) {
+    public void removeScadaProject(AScadaProjectData scadaProjectData) {
         spdStorage.remove(scadaProjectData);
         serialize();
         refresh();
@@ -49,7 +49,7 @@ public class Storage implements IVisual {
         try {
             FileInputStream fis = new FileInputStream(STORAGE_FILE_PATH);
             ObjectInputStream ois = new ObjectInputStream(fis);
-            spdStorage = (ArrayList<IScadaProjectData>)ois.readObject();
+            spdStorage = (ArrayList<AScadaProjectData>)ois.readObject();
             ois.close();
             fis.close();
         } catch (IOException e) {
@@ -68,8 +68,8 @@ public class Storage implements IVisual {
     @Override
     public void render(View view) {
         if (view != null) {
-//            view.getTopPanel().removeAll();
-            for (IScadaProjectData scadaProjectData: spdStorage) {
+            view.getTopPanel().removeAll();
+            for (AScadaProjectData scadaProjectData: spdStorage) {
                 scadaProjectData.render(view);
             }
         }
