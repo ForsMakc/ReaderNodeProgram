@@ -1,17 +1,11 @@
 package student.bazhin.core;
 
-import student.bazhin.interfaces.IComponent;
-import student.bazhin.interfaces.IData;
-
-import java.util.LinkedList;
-
-public class Core implements IComponent{
+public class Core{
 
     protected View view;
     protected Storage storage;
     protected boolean working;
     protected static Core instance;
-    protected LinkedList<IComponent> componentsList;
 
     protected Core() {}
 
@@ -19,7 +13,7 @@ public class Core implements IComponent{
         working = true;
         view = new View();
         storage = new Storage();
-        componentsList = new LinkedList<>();
+        //connection = new Connection(); //работая в другом потоке, в нём будет создаваться соединение, а также выполняться работа опрашивателя и преобразователя, проходя по списку скада
     }
 
     public static Core getInstance() {
@@ -30,25 +24,12 @@ public class Core implements IComponent{
         return instance;
     }
 
-    public Storage getStorage() {
-        return storage;
-    }
-
     public View getView(){
         return view;
     }
 
-    @Override
-    public IData perform() {
-        if (working) {
-            while (true) {
-                if (!componentsList.isEmpty()) {
-                    componentsList.element().perform();
-                    componentsList.poll();
-                }
-            }
-        }
-        return null;
+    public Storage getStorage() {
+        return storage;
     }
 
 }

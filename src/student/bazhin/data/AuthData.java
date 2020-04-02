@@ -18,4 +18,12 @@ public class AuthData implements Serializable {
     public String getPassword() {
         return password;
     }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

@@ -6,12 +6,9 @@ import java.io.Serializable;
 
 public class MasterScada3ProjectData extends AScadaProjectData implements Serializable {
 
-    public MasterScada3ProjectData(int id, boolean status) {
+    public MasterScada3ProjectData(int id) {
         this.id = id;
-        this.scadaName = "Master Scada 3.x";
-        this.scadaProjectName = "Волочильный стан";
-        this.status = status;
-        this.authData = new AuthData("user1","1234");
+        this.status = true;
     }
 
     @Override
@@ -19,4 +16,13 @@ public class MasterScada3ProjectData extends AScadaProjectData implements Serial
         return null;
     }
 
+    @Override
+    protected void updateScadaSource() {
+
+    }
+
+    @Override
+    public boolean validateScadaData() {
+        return true;
+    }
 }

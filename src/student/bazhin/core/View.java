@@ -1,5 +1,7 @@
 package student.bazhin.core;
 
+import student.bazhin.components.Registrar;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -23,15 +25,14 @@ public class View extends JFrame {
         setVisible(true);
     }
 
-    public void addButton(JButton b) {
-        add(b);
-        invalidate();
-    }
-
     public void addComponent(JComponent c, JPanel panel) {
         panel.add(c);
-        revalidate();
-        repaint();
+        update(panel);
+    }
+
+    public void update(JPanel panel){
+        panel.revalidate();
+        panel.repaint();
     }
 
     public JPanel getTopPanel() {
@@ -57,7 +58,7 @@ public class View extends JFrame {
         appMenu.setFont(font);
 
         JMenuItem newMenuItem = new JMenuItem("Новый SCADA проект");
-        newMenuItem.addActionListener(event -> System.out.println("test"));
+        newMenuItem.addActionListener(event -> new Registrar().perform());
         newMenuItem.setFont(font);
         appMenu.add(newMenuItem);
 

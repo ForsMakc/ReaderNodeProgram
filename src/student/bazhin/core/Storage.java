@@ -1,8 +1,6 @@
 package student.bazhin.core;
 
 import student.bazhin.data.AScadaProjectData;
-import student.bazhin.data.MasterScada3ProjectData;
-import student.bazhin.data.NewScadaProjectData;
 import student.bazhin.interfaces.IVisual;
 
 import java.io.*;
@@ -15,20 +13,30 @@ public class Storage implements IVisual {
 
     public Storage() {
         spdStorage = new ArrayList<>();
-        insertScadaProject(new MasterScada3ProjectData(1,true));
-        insertScadaProject(new NewScadaProjectData(1,100,false));
-        insertScadaProject(new MasterScada3ProjectData(2,false));
         refresh();
+    }
+
+    public int getNewId() {
+        int maxId = 0;
+        for (AScadaProjectData scadaProjectData: spdStorage) {
+            if (maxId < scadaProjectData.getId()) {
+                maxId = scadaProjectData.getId();
+            }
+        }
+        return maxId + 1;
     }
 
     public void insertScadaProject(AScadaProjectData scadaProjectData) {
         spdStorage.add(scadaProjectData);
-        serialize();
-        refresh();
+        updateScadaProjects();
     }
 
     public void removeScadaProject(AScadaProjectData scadaProjectData) {
         spdStorage.remove(scadaProjectData);
+        updateScadaProjects();
+    }
+
+    public void updateScadaProjects() {
         serialize();
         refresh();
     }
@@ -54,6 +62,8 @@ public class Storage implements IVisual {
             fis.close();
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("Ошибка чтения сериализованного файла!");
+            spdStorage.clear();
         } catch (ClassNotFoundException e) {
             System.out.println("Класс не найден");
             e.printStackTrace();
@@ -72,6 +82,7 @@ public class Storage implements IVisual {
             for (AScadaProjectData scadaProjectData: spdStorage) {
                 scadaProjectData.render(view);
             }
+            view.update(view.getTopPanel());
         }
     }
 }
