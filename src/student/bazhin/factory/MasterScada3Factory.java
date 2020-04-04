@@ -1,8 +1,8 @@
 package student.bazhin.factory;
 
 import student.bazhin.core.Core;
-import student.bazhin.data.AScadaProject;
-import student.bazhin.data.MasterScada3Project;
+import student.bazhin.components.scadaProject.AScadaProject;
+import student.bazhin.components.scadaProject.MasterScada3Project;
 
 public class MasterScada3Factory implements IScadaFactory {
     @Override

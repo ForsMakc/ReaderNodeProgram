@@ -1,89 +1,142 @@
 package student.bazhin.components;
 
+import student.bazhin.components.scadaProject.AScadaProject;
 import student.bazhin.core.Core;
-import student.bazhin.data.AScadaProject;
 import student.bazhin.data.ScadaData;
 import student.bazhin.interfaces.IComponent;
 import student.bazhin.interfaces.IData;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ConcurrentModificationException;
 import java.util.Vector;
 
 public class Connector implements IComponent {
 
-    protected static final String serverHost = "localhost";
     protected static final int serverPort = 3345;
+    protected static final String serverHost = "localhost";
 
     protected Socket clientSocket = null;
     protected PrintWriter serverOut = null;
     protected BufferedReader serverIn = null;
 
-
     @Override
     public IData perform() {
-        try {
-            clientSocket = new Socket(serverHost, serverPort);
-            serverOut = new PrintWriter(clientSocket.getOutputStream(),true);
-            serverIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            System.out.println("Клиент подключился к сокету.");
-
-            if (clientSocket.isConnected()) {
-                StringBuffer initServerData = getInitData();
-                serverOut.println(initServerData);
-                System.out.println("Данные отправлены:" + initServerData);
-
-                String line = null;
-                StringBuilder initServerResponse = new StringBuilder();
-                while ((line = serverIn.readLine()) != null) {
-                    initServerResponse.append(line);
-                }
-                System.out.println("Данные получены:" + initServerResponse);
-
-                startSending();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (initConnection()) {
+            Core.getInstance().getView().setConnectionInfo(true);
+            startSending();
         }
         return null;
     }
 
-    private void startSending() {
-        Vector<AScadaProject> scadaProjectsStorage = Core.getInstance().getStorage().getScadaList();
+    protected boolean initConnection() {
+        try {
+            clientSocket = new Socket(serverHost, serverPort);
+        } catch (IOException e) {
+            e.printStackTrace();
+            closeConnection();
+            return false;
+        }
+        try {
+            serverOut = new PrintWriter(clientSocket.getOutputStream(),true);
+        } catch (IOException e) {
+            e.printStackTrace();
+            closeConnection();
+            return false;
+        }
+        try {
+            serverIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        } catch (IOException e) {
+            e.printStackTrace();
+            closeConnection();
+            return false;
+        }
+        if (clientSocket.isConnected()) {
+            handleInitResponse(sendDataToServer(getInitData()));
+        }
+        return haveConnection();
+    }
+
+    private boolean haveConnection() {
+        return sendDataToServer(new ScadaData("test")) != null;
+    }
+
+    protected ScadaData getInitData() {
+        return new ScadaData("Hello!");
+    }
+
+    protected void handleInitResponse(ScadaData initResponse) {
+        //todo обработка ответа инициализации сервера
+    }
+
+    protected void startSending() {
         new Thread(() -> {
-            while (clientSocket.isConnected()) {
-                for (AScadaProject scadaProject : scadaProjectsStorage) {
-                    if (scadaProject.getStatus()){
-                        ScadaData data = (ScadaData)scadaProject.perform();
-                        sendDataToServer(data);
+            Vector<AScadaProject> scadaProjectsStorage;
+            while (haveConnection()) {
+                try {
+                    scadaProjectsStorage = Core.getInstance().getStorage().actionWithScadaList();
+                    for (AScadaProject scadaProject : scadaProjectsStorage) {
+                        if (haveConnection()) {
+                            ScadaData data = (ScadaData)scadaProject.perform();
+                            // ScadaData response = sendDataToServer(data);
+                            ScadaData response = sendDataToServer(data.add("Номер скада проекта: " + scadaProjectsStorage.indexOf(scadaProject)));
+                            if (response != null) {
+                                //todo обработка ответа сервера
+                            }
+                        } else {
+                            break;
+                        }
                     }
+                } catch (ConcurrentModificationException e) {
+                    e.printStackTrace();
                 }
             }
         }).start();
     }
 
-    private void sendDataToServer(ScadaData data) {
+    protected ScadaData sendDataToServer(ScadaData dataToServer) {
+        if (dataToServer != null) {
+            try {
+                serverOut.println(dataToServer);
+                System.out.println("Данные отправлены:" + dataToServer);
+
+                String line;
+                StringBuilder serverResponse = new StringBuilder();
+                while (!(line = serverIn.readLine()).equals("")) {
+                    serverResponse.append(line);
+                }
+                System.out.println("Данные получены:" + serverResponse);
+                return new ScadaData(serverResponse.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Ошибка соединения с сервером");
+                closeConnection();
+                return null;
+            }
+        }
+        return null;
     }
 
-    private StringBuffer getInitData() {
-        return new StringBuffer("test");
+    protected void closeConnection() {
+        Core.getInstance().getView().setConnectionInfo(false);
+        try {
+            if (clientSocket != null) {
+                clientSocket.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            if (serverIn != null) {
+                serverIn.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (serverOut != null) {
+            serverOut.close();
+        }
+
     }
 
-//                    // проверяем условие выхода из соединения
-//                    if(clientCommand.equalsIgnoreCase("quit")){
-//
-//                        // если условие выхода достигнуто разъединяемся
-//                        System.out.println("Client kill connections");
-//                        Thread.sleep(2000);
-//
-//                        // смотрим что нам ответил сервер на последок перед закрытием ресурсов
-//                        if(ois.read() > -1)     {
-//                            System.out.println("reading...");
-//                            String in = ois.readUTF();
-//                            System.out.println(in);
-//                        }
-//
-//                        // после предварительных приготовлений выходим из цикла записи чтения
-//                        break;
-//                    }
 }

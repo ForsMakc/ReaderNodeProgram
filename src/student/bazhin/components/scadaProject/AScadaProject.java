@@ -1,7 +1,8 @@
-package student.bazhin.data;
+package student.bazhin.components.scadaProject;
 
 import student.bazhin.core.Core;
 import student.bazhin.core.View;
+import student.bazhin.data.AuthData;
 import student.bazhin.interfaces.IVisualComponent;
 
 import javax.swing.*;
@@ -26,10 +27,6 @@ public abstract class AScadaProject implements IVisualComponent, Serializable{
 
     public int getId() {
         return id;
-    }
-
-    public boolean getStatus() {
-        return status;
     }
 
     public void setPath(String path) {

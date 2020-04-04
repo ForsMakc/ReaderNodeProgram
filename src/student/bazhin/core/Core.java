@@ -6,6 +6,7 @@ public class Core{
 
     protected View view;
     protected Storage storage;
+    protected Connector connector;
     protected boolean working;
     protected static Core instance;
 
@@ -15,7 +16,8 @@ public class Core{
         working = true;
         view = new View();
         storage = new Storage();
-//        new Connector().perform(); //работая в другом потоке, в нём будет создаваться соединение, а также выполняться работа опрашивателя и преобразователя, проходя по списку скада
+        connector = new Connector();
+        connector.perform();
     }
 
     public static Core getInstance() {
@@ -32,6 +34,10 @@ public class Core{
 
     public Storage getStorage() {
         return storage;
+    }
+
+    public Connector getConnector() {
+        return connector;
     }
 
 }

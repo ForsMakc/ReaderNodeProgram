@@ -12,6 +12,11 @@ public class View extends JFrame {
     int width = 550;
     int height = 750;
 
+    protected static final String FRAME_TITLE = "Считывающий узел";
+    protected static final String FRAME_TITLE_WITHOUT_CONN = "Считывающий узел (нет подключения к серверу)";
+
+    protected JMenuItem connMenuItem;
+
     protected JPanel topPanel;
     protected JPanel bottomPanel;
 
@@ -20,7 +25,7 @@ public class View extends JFrame {
 
 
     public View() {
-        super("Считывающий узел");
+        super(FRAME_TITLE);
         init();
         setVisible(true);
     }
@@ -33,6 +38,17 @@ public class View extends JFrame {
     public void update(JPanel panel){
         panel.revalidate();
         panel.repaint();
+    }
+
+    public void setConnectionInfo(boolean b) {
+        if (b) {
+            JOptionPane.showMessageDialog(this, "Соединение с сервером установлено!");
+            setTitle(FRAME_TITLE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Соединение с сервером потеряно!");
+            setTitle(FRAME_TITLE_WITHOUT_CONN);
+        }
+        connMenuItem.setEnabled(!b);
     }
 
     public JPanel getTopPanel() {
@@ -61,6 +77,13 @@ public class View extends JFrame {
         newMenuItem.addActionListener(event -> new Registrar().perform());
         newMenuItem.setFont(font);
         appMenu.add(newMenuItem);
+
+        connMenuItem = new JMenuItem("Подключиться к серверу");
+        connMenuItem.addActionListener(event -> {
+            Core.getInstance().getConnector().perform();
+        });
+        connMenuItem.setFont(font);
+        appMenu.add(connMenuItem);
 
         menuBar.add(appMenu);
         setJMenuBar(menuBar);

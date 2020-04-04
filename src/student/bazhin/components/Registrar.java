@@ -1,8 +1,8 @@
 package student.bazhin.components;
 
+import student.bazhin.components.scadaProject.AScadaProject;
 import student.bazhin.core.Core;
 import student.bazhin.core.View;
-import student.bazhin.data.AScadaProject;
 import student.bazhin.data.AuthData;
 import student.bazhin.factory.ScadaFactory;
 import student.bazhin.interfaces.IData;

@@ -1,6 +1,6 @@
 package student.bazhin.core;
 
-import student.bazhin.data.AScadaProject;
+import student.bazhin.components.scadaProject.AScadaProject;
 import student.bazhin.interfaces.IVisual;
 
 import java.io.*;
@@ -20,7 +20,7 @@ public class Storage implements IVisual {
         render(Core.getInstance().getView());
     }
 
-    public Vector<AScadaProject> getScadaList() {
+    public synchronized Vector<AScadaProject> actionWithScadaList(ENAM action) {
         return scadaProjectsStorage;
     }
 

@@ -1,6 +1,6 @@
 package student.bazhin.factory;
 
-import student.bazhin.data.AScadaProject;
+import student.bazhin.components.scadaProject.AScadaProject;
 
 public interface IScadaFactory {
 
