@@ -2,7 +2,7 @@ package student.bazhin.components;
 
 import student.bazhin.core.Core;
 import student.bazhin.core.View;
-import student.bazhin.data.AScadaProjectData;
+import student.bazhin.data.AScadaProject;
 import student.bazhin.data.AuthData;
 import student.bazhin.factory.ScadaFactory;
 import student.bazhin.interfaces.IData;
@@ -17,6 +17,26 @@ public class Registrar implements IVisualComponent {
     protected JTextField scadaPassEdit;
     protected JTextField scadaProjectEdit;
     protected JComboBox<String> scadaComboBox;
+
+    protected void addScada() {
+        View view = Core.getInstance().getView();
+        String scadaName = (String)scadaComboBox.getSelectedItem();
+
+        AScadaProject scadaProject = ScadaFactory.createScadaProject(scadaName);
+        scadaProject.setScadaName(scadaName);
+        scadaProject.setPath(scadaPathEdit.getText());
+        scadaProject.setScadaProjectName(scadaProjectEdit.getText());
+        scadaProject.setAuthData(new AuthData(scadaLoginEdit.getText(),scadaPassEdit.getText()));
+
+        if (scadaProject.validateScadaData()) {
+            Core.getInstance().getStorage().insertScadaProject(scadaProject);
+        } else {
+            JOptionPane.showMessageDialog(view, "Не удалось добавить SCADA проект. Проверьте корректность данных!");
+        }
+
+        view.getBottomPanel().removeAll();
+        view.update(view.getBottomPanel());
+    }
 
     @Override
     public IData perform() {
@@ -56,26 +76,6 @@ public class Registrar implements IVisualComponent {
         JButton updateButton = new JButton("Добавить SCADA проект");
         updateButton.addActionListener(e -> addScada());
         view.addComponent(updateButton,view.getBottomPanel());
-    }
-
-    protected void addScada() {
-        View view = Core.getInstance().getView();
-        String scadaName = (String)scadaComboBox.getSelectedItem();
-
-        AScadaProjectData scadaProjectData = ScadaFactory.createScadaProject(scadaName);
-        scadaProjectData.setScadaName(scadaName);
-        scadaProjectData.setPath(scadaPathEdit.getText());
-        scadaProjectData.setScadaProjectName(scadaProjectEdit.getText());
-        scadaProjectData.setAuthData(new AuthData(scadaLoginEdit.getText(),scadaPassEdit.getText()));
-
-        if (scadaProjectData.validateScadaData()) {
-            Core.getInstance().getStorage().insertScadaProject(scadaProjectData);
-        } else {
-            JOptionPane.showMessageDialog(view, "Не удалось добавить SCADA проект. Проверьте корректность данных!");
-        }
-
-        view.getBottomPanel().removeAll();
-        view.update(view.getBottomPanel());
     }
 
 }

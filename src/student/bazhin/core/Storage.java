@@ -1,38 +1,46 @@
 package student.bazhin.core;
 
-import student.bazhin.data.AScadaProjectData;
+import student.bazhin.data.AScadaProject;
 import student.bazhin.interfaces.IVisual;
 
 import java.io.*;
-import java.util.ArrayList;
+import java.util.Vector;
 
 public class Storage implements IVisual {
 
     protected final String STORAGE_FILE_PATH = "res/scada.ser";
-    protected ArrayList<AScadaProjectData> spdStorage;
+    protected Vector<AScadaProject> scadaProjectsStorage;
 
     public Storage() {
-        spdStorage = new ArrayList<>();
-        refresh();
+        scadaProjectsStorage = new Vector<>();
+        deserialize();
+        for (AScadaProject scadaProject: scadaProjectsStorage) {
+            scadaProject.validateScadaData();
+        }
+        render(Core.getInstance().getView());
+    }
+
+    public Vector<AScadaProject> getScadaList() {
+        return scadaProjectsStorage;
     }
 
     public int getNewId() {
         int maxId = 0;
-        for (AScadaProjectData scadaProjectData: spdStorage) {
-            if (maxId < scadaProjectData.getId()) {
-                maxId = scadaProjectData.getId();
+        for (AScadaProject scadaProject: scadaProjectsStorage) {
+            if (maxId < scadaProject.getId()) {
+                maxId = scadaProject.getId();
             }
         }
         return maxId + 1;
     }
 
-    public void insertScadaProject(AScadaProjectData scadaProjectData) {
-        spdStorage.add(scadaProjectData);
+    public void insertScadaProject(AScadaProject scadaProject) {
+        scadaProjectsStorage.add(scadaProject);
         updateScadaProjects();
     }
 
-    public void removeScadaProject(AScadaProjectData scadaProjectData) {
-        spdStorage.remove(scadaProjectData);
+    public void removeScadaProject(AScadaProject scadaProject) {
+        scadaProjectsStorage.remove(scadaProject);
         updateScadaProjects();
     }
 
@@ -45,7 +53,7 @@ public class Storage implements IVisual {
         try {
             FileOutputStream fos = new FileOutputStream(STORAGE_FILE_PATH,false);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(spdStorage);
+            oos.writeObject(scadaProjectsStorage);
             oos.close();
             fos.close();
         } catch (IOException e) {
@@ -57,13 +65,13 @@ public class Storage implements IVisual {
         try {
             FileInputStream fis = new FileInputStream(STORAGE_FILE_PATH);
             ObjectInputStream ois = new ObjectInputStream(fis);
-            spdStorage = (ArrayList<AScadaProjectData>)ois.readObject();
+            scadaProjectsStorage = (Vector<AScadaProject>)ois.readObject();
             ois.close();
             fis.close();
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Ошибка чтения сериализованного файла!");
-            spdStorage.clear();
+            scadaProjectsStorage.clear();
         } catch (ClassNotFoundException e) {
             System.out.println("Класс не найден");
             e.printStackTrace();
@@ -79,10 +87,11 @@ public class Storage implements IVisual {
     public void render(View view) {
         if (view != null) {
             view.getTopPanel().removeAll();
-            for (AScadaProjectData scadaProjectData: spdStorage) {
-                scadaProjectData.render(view);
+            for (AScadaProject scadaProject: scadaProjectsStorage) {
+                scadaProject.render(view);
             }
             view.update(view.getTopPanel());
         }
     }
+
 }

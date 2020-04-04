@@ -2,7 +2,6 @@ package student.bazhin.data;
 
 import student.bazhin.core.Core;
 import student.bazhin.core.View;
-import student.bazhin.interfaces.IData;
 import student.bazhin.interfaces.IVisualComponent;
 
 import javax.swing.*;
@@ -11,14 +10,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
 
-public abstract class AScadaProjectData implements IVisualComponent, IData, Serializable{
+public abstract class AScadaProject implements IVisualComponent, Serializable{
 
-    protected int id;
-    protected String path;
-    protected String scadaName;
-    protected AuthData authData;
-    protected String scadaProjectName;
-    protected boolean status;
+    protected volatile int id;
+    protected volatile String path;
+    protected volatile String scadaName;
+    protected volatile AuthData authData;
+    protected volatile String scadaProjectName;
+    protected volatile boolean status;
 
     protected JTextField scadaPathEdit;
     protected JTextField scadaProjectEdit;
@@ -27,6 +26,10 @@ public abstract class AScadaProjectData implements IVisualComponent, IData, Seri
 
     public int getId() {
         return id;
+    }
+
+    public boolean getStatus() {
+        return status;
     }
 
     public void setPath(String path) {
@@ -67,9 +70,9 @@ public abstract class AScadaProjectData implements IVisualComponent, IData, Seri
     protected abstract class ClickHandler implements ActionListener{
 
         protected View view;
-        protected AScadaProjectData sender;
+        protected AScadaProject sender;
 
-        public ClickHandler(AScadaProjectData sender, View view) {
+        public ClickHandler(AScadaProject sender, View view) {
             this.sender = sender;
             this.view = view;
         }
@@ -78,7 +81,7 @@ public abstract class AScadaProjectData implements IVisualComponent, IData, Seri
 
     protected class ItemClickHandler extends ClickHandler  {
 
-        public ItemClickHandler(AScadaProjectData sender, View view) {
+        public ItemClickHandler(AScadaProject sender, View view) {
             super(sender,view);
         }
 
@@ -132,7 +135,7 @@ public abstract class AScadaProjectData implements IVisualComponent, IData, Seri
 
     protected class DeleteClickHandler extends ClickHandler  {
 
-        public DeleteClickHandler(AScadaProjectData sender, View view) {
+        public DeleteClickHandler(AScadaProject sender, View view) {
             super(sender,view);
         }
 
@@ -147,7 +150,7 @@ public abstract class AScadaProjectData implements IVisualComponent, IData, Seri
 
     protected class UpdateClickHandler extends ClickHandler  {
 
-        public UpdateClickHandler(AScadaProjectData sender, View view) {
+        public UpdateClickHandler(AScadaProject sender, View view) {
             super(sender,view);
         }
 

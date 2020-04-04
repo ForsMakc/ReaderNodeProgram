@@ -4,16 +4,15 @@ import student.bazhin.interfaces.IData;
 
 import java.io.Serializable;
 
-public class MasterScada3ProjectData extends AScadaProjectData implements Serializable {
+public class MasterScada3Project extends AScadaProject implements Serializable {
 
-    public MasterScada3ProjectData(int id) {
+    public MasterScada3Project(int id) {
         this.id = id;
-        this.status = true;
     }
 
     @Override
     public IData perform() {
-        return null;
+        return new ScadaData(id + " " + path + " "  + scadaName + " "  + scadaProjectName);
     }
 
     @Override
@@ -23,6 +22,7 @@ public class MasterScada3ProjectData extends AScadaProjectData implements Serial
 
     @Override
     public boolean validateScadaData() {
-        return true;
+        status = true;
+        return status;
     }
 }

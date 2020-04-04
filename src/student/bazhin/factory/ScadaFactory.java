@@ -1,6 +1,6 @@
 package student.bazhin.factory;
 
-import student.bazhin.data.AScadaProjectData;
+import student.bazhin.data.AScadaProject;
 
 public class ScadaFactory {
 
@@ -8,7 +8,7 @@ public class ScadaFactory {
         "Master Scada 3.x"
     };
 
-    public static AScadaProjectData createScadaProject(String scadaSystemName) {
+    public static AScadaProject createScadaProject(String scadaSystemName) {
         switch (scadaSystemName) {
             case "Master Scada 3.x": {
                 return new MasterScada3Factory().createScadaProject();

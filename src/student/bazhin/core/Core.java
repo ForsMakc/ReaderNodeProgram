@@ -1,5 +1,7 @@
 package student.bazhin.core;
 
+import student.bazhin.components.Connector;
+
 public class Core{
 
     protected View view;
@@ -13,7 +15,7 @@ public class Core{
         working = true;
         view = new View();
         storage = new Storage();
-        //connection = new Connection(); //работая в другом потоке, в нём будет создаваться соединение, а также выполняться работа опрашивателя и преобразователя, проходя по списку скада
+//        new Connector().perform(); //работая в другом потоке, в нём будет создаваться соединение, а также выполняться работа опрашивателя и преобразователя, проходя по списку скада
     }
 
     public static Core getInstance() {

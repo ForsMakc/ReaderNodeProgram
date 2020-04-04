@@ -1,9 +1,9 @@
 package student.bazhin.factory;
 
-import student.bazhin.data.AScadaProjectData;
+import student.bazhin.data.AScadaProject;
 
 public interface IScadaFactory {
 
-    public AScadaProjectData createScadaProject();
+    public AScadaProject createScadaProject();
 
 }

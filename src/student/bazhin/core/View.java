@@ -80,12 +80,6 @@ public class View extends JFrame {
         splitVertical.setBottomComponent(bottomJScrollPain);
         splitVertical.setDividerLocation((int)round(height * 0.5));
         add(splitVertical);
-
-//        for (int i = 1; i < 40; i++) {
-//            JButton b = new JButton("Скада " + i);
-//            topPanel.add(b);
-//        }
-//        topJScrollPain.revalidate();
     }
 
 }
