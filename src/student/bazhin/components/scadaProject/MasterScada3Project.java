@@ -23,6 +23,7 @@ public class MasterScada3Project extends AScadaProject implements Serializable {
 
     @Override
     protected void updateScadaSource() {
+        validateScadaData();
         //todo обновить scada директорию и ресурсы
     }
 

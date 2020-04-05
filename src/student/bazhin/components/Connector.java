@@ -11,6 +11,9 @@ import java.net.Socket;
 import java.util.ConcurrentModificationException;
 import java.util.Vector;
 
+import static student.bazhin.helper.ActionWithStorage.CALLBACK;
+import static student.bazhin.helper.ActionWithStorage.GET;
+
 public class Connector implements IComponent {
 
     protected static final int serverPort = 3345;
@@ -57,7 +60,7 @@ public class Connector implements IComponent {
         return haveConnection();
     }
 
-    private boolean haveConnection() {
+    protected boolean haveConnection() {
         return sendDataToServer(new ScadaData("test")) != null;
     }
 
@@ -71,22 +74,28 @@ public class Connector implements IComponent {
 
     protected void startSending() {
         new Thread(() -> {
-            Vector<AScadaProject> scadaProjectsStorage;
             while (haveConnection()) {
                 try {
-                    scadaProjectsStorage = Core.getInstance().getStorage().actionWithScadaList();
-                    for (AScadaProject scadaProject : scadaProjectsStorage) {
-                        if (haveConnection()) {
-                            ScadaData data = (ScadaData)scadaProject.perform();
-                            // ScadaData response = sendDataToServer(data);
-                            ScadaData response = sendDataToServer(data.add("Номер скада проекта: " + scadaProjectsStorage.indexOf(scadaProject)));
-                            if (response != null) {
-                                //todo обработка ответа сервера
+                    Core.getInstance().getStorage().actionWithStorage(CALLBACK, () -> {
+                        Vector<AScadaProject> scadaProjectsStorage;
+                        scadaProjectsStorage = Core.getInstance().getStorage().actionWithStorage(GET,null);
+                        for (AScadaProject scadaProject : scadaProjectsStorage) {
+                            if (haveConnection()) {
+                                ScadaData data = (ScadaData)scadaProject.perform();
+                                // ScadaData response = sendDataToServer(data);
+                                ScadaData response = null;
+                                if (data != null) {
+                                    response = sendDataToServer(data.add(" Номер скада проекта: " + scadaProjectsStorage.indexOf(scadaProject)));
+                                }
+                                if (response != null) {
+                                    //todo обработка ответа сервера
+                                }
+                            } else {
+                                break;
                             }
-                        } else {
-                            break;
                         }
-                    }
+                        return null;
+                    });
                 } catch (ConcurrentModificationException e) {
                     e.printStackTrace();
                 }
@@ -107,7 +116,7 @@ public class Connector implements IComponent {
                 }
                 System.out.println("Данные получены:" + serverResponse);
                 return new ScadaData(serverResponse.toString());
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("Ошибка соединения с сервером");
                 closeConnection();

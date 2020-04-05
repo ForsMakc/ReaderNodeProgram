@@ -10,6 +10,8 @@ import student.bazhin.interfaces.IVisualComponent;
 
 import javax.swing.*;
 
+import static student.bazhin.helper.ActionWithStorage.INSERT;
+
 public class Registrar implements IVisualComponent {
 
     protected JTextField scadaPathEdit;
@@ -29,7 +31,7 @@ public class Registrar implements IVisualComponent {
         scadaProject.setAuthData(new AuthData(scadaLoginEdit.getText(),scadaPassEdit.getText()));
 
         if (scadaProject.validateScadaData()) {
-            Core.getInstance().getStorage().insertScadaProject(scadaProject);
+            Core.getInstance().getStorage().actionWithStorage(INSERT,scadaProject);
         } else {
             JOptionPane.showMessageDialog(view, "Не удалось добавить SCADA проект. Проверьте корректность данных!");
         }

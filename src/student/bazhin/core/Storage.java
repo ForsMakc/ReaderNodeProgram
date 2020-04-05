@@ -1,6 +1,8 @@
 package student.bazhin.core;
 
 import student.bazhin.components.scadaProject.AScadaProject;
+import student.bazhin.helper.ActionWithStorage;
+import student.bazhin.interfaces.IComponent;
 import student.bazhin.interfaces.IVisual;
 
 import java.io.*;
@@ -20,8 +22,34 @@ public class Storage implements IVisual {
         render(Core.getInstance().getView());
     }
 
-    public synchronized Vector<AScadaProject> actionWithScadaList(ENAM action) {
-        return scadaProjectsStorage;
+    public synchronized Vector<AScadaProject> actionWithStorage(ActionWithStorage action, IComponent component) {
+        switch (action) {
+            case GET: {
+                return scadaProjectsStorage;
+            }
+            case CALLBACK: {
+                if (component != null) {
+                    component.perform();
+                }
+                break;
+            }
+            case INSERT: {
+                insertScadaProject((AScadaProject)component);
+                break;
+            }
+            case DELETE: {
+                removeScadaProject((AScadaProject)component);
+                break;
+            }
+            case UPDATE: {
+                if (component != null) {
+                    component.perform();
+                    updateScadaProjects();
+                }
+                break;
+            }
+        }
+        return null;
     }
 
     public int getNewId() {
@@ -34,17 +62,17 @@ public class Storage implements IVisual {
         return maxId + 1;
     }
 
-    public void insertScadaProject(AScadaProject scadaProject) {
+    protected void insertScadaProject(AScadaProject scadaProject) {
         scadaProjectsStorage.add(scadaProject);
         updateScadaProjects();
     }
 
-    public void removeScadaProject(AScadaProject scadaProject) {
+    protected void removeScadaProject(AScadaProject scadaProject) {
         scadaProjectsStorage.remove(scadaProject);
         updateScadaProjects();
     }
 
-    public void updateScadaProjects() {
+    protected void updateScadaProjects() {
         serialize();
         refresh();
     }

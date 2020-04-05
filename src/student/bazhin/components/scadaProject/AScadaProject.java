@@ -3,13 +3,18 @@ package student.bazhin.components.scadaProject;
 import student.bazhin.core.Core;
 import student.bazhin.core.View;
 import student.bazhin.data.AuthData;
+import student.bazhin.interfaces.IComponent;
+import student.bazhin.interfaces.IData;
 import student.bazhin.interfaces.IVisualComponent;
+import static student.bazhin.helper.ActionWithStorage.DELETE;
+import static student.bazhin.helper.ActionWithStorage.UPDATE;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
+
 
 public abstract class AScadaProject implements IVisualComponent, Serializable{
 
@@ -140,7 +145,7 @@ public abstract class AScadaProject implements IVisualComponent, Serializable{
         public void actionPerformed(ActionEvent e) {
             view.getBottomPanel().removeAll();
             view.update(view.getBottomPanel());
-            Core.getInstance().getStorage().removeScadaProject(sender);
+            Core.getInstance().getStorage().actionWithStorage(DELETE,sender);
         }
 
     }
@@ -154,31 +159,33 @@ public abstract class AScadaProject implements IVisualComponent, Serializable{
         @Override
         public void actionPerformed(ActionEvent e) {
             status = false; //todo надо обязательно вернуть в статус true, если апдейт удался
-
-            String newPath = scadaPathEdit.getText();
-            if (!newPath.equals(path)) {
-                path = newPath;
-            }
-
-            String newProjectName = scadaProjectEdit.getText();
-            if (!newProjectName.equals(scadaProjectName)) {
-                scadaProjectName = newProjectName;
-            }
-
-            String newLogin = scadaLoginEdit.getText();
-            if (!newLogin.equals(authData.getLogin())) {
-                authData.setLogin(newLogin);
-            }
-
-            String newPassword = scadaPassEdit.getText();
-            if (!newPassword.equals(authData.getPassword())) {
-                authData.setPassword(newPassword);
-            }
-
-            updateScadaSource();
             view.getBottomPanel().removeAll();
             view.update(view.getBottomPanel());
-            Core.getInstance().getStorage().updateScadaProjects();
+            Core.getInstance().getStorage().actionWithStorage(UPDATE, () -> {
+                String newPath = scadaPathEdit.getText();
+                if (!newPath.equals(path)) {
+                    path = newPath;
+                }
+
+                String newProjectName = scadaProjectEdit.getText();
+                if (!newProjectName.equals(scadaProjectName)) {
+                    scadaProjectName = newProjectName;
+                }
+
+                String newLogin = scadaLoginEdit.getText();
+                if (!newLogin.equals(authData.getLogin())) {
+                    authData.setLogin(newLogin);
+                }
+
+                String newPassword = scadaPassEdit.getText();
+                if (!newPassword.equals(authData.getPassword())) {
+                    authData.setPassword(newPassword);
+                }
+
+                updateScadaSource();
+
+                return null;
+            });
         }
 
     }
