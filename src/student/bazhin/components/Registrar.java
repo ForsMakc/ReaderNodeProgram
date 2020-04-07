@@ -3,7 +3,6 @@ package student.bazhin.components;
 import student.bazhin.components.scadaProject.AScadaProject;
 import student.bazhin.core.Core;
 import student.bazhin.core.View;
-import student.bazhin.data.AuthData;
 import student.bazhin.factory.ScadaFactory;
 import student.bazhin.interfaces.IData;
 import student.bazhin.interfaces.IVisualComponent;
@@ -14,31 +13,8 @@ import static student.bazhin.helper.ActionWithStorage.INSERT;
 
 public class Registrar implements IVisualComponent {
 
-    protected JTextField scadaPathEdit;
-    protected JTextField scadaLoginEdit;
-    protected JTextField scadaPassEdit;
-    protected JTextField scadaProjectEdit;
+    protected AScadaProject scadaProject;
     protected JComboBox<String> scadaComboBox;
-
-    protected void addScada() {
-        View view = Core.getInstance().getView();
-        String scadaName = (String)scadaComboBox.getSelectedItem();
-
-        AScadaProject scadaProject = ScadaFactory.createScadaProject(scadaName);
-        scadaProject.setScadaName(scadaName);
-        scadaProject.setPath(scadaPathEdit.getText());
-        scadaProject.setScadaProjectName(scadaProjectEdit.getText());
-        scadaProject.setAuthData(new AuthData(scadaLoginEdit.getText(),scadaPassEdit.getText()));
-
-        if (scadaProject.validateScadaData()) {
-            Core.getInstance().getStorage().actionWithStorage(INSERT,scadaProject);
-        } else {
-            JOptionPane.showMessageDialog(view, "Не удалось добавить SCADA проект. Проверьте корректность данных!");
-        }
-
-        view.getBottomPanel().removeAll();
-        view.update(view.getBottomPanel());
-    }
 
     @Override
     public IData perform() {
@@ -48,36 +24,53 @@ public class Registrar implements IVisualComponent {
 
     @Override
     public void render(View view) {
-        view.getBottomPanel().removeAll();
+        scadaComboBox = new JComboBox<>(ScadaFactory.scadaSystemsList);
+        scadaComboBox.addItemListener(e -> switchScada(view));
 
+        view.getBottomPanel().removeAll();
+        renderScadaComboBox(view);
+        switchScada(view);
+        renderAddButton(view);
+    }
+
+    protected void switchScada(View view) {
+        String scadaName = (String)scadaComboBox.getSelectedItem();
+        if (scadaName != null) {
+            scadaProject = ScadaFactory.createScadaProject(scadaName);
+            if (scadaProject != null) {
+                view.getBottomPanel().removeAll();
+                view.update(view.getBottomPanel());
+                renderScadaComboBox(view);
+                scadaProject.renderScadaFields(view);
+            }
+        }
+    }
+
+    protected void renderScadaComboBox(View view) {
         JLabel scadaNameLabel = new JLabel("Тип SCADA-системы:");
         view.addComponent(scadaNameLabel,view.getBottomPanel());
-        scadaComboBox = new JComboBox<>(ScadaFactory.scadaSystemsList);
         view.addComponent(scadaComboBox,view.getBottomPanel());
+    }
 
-        JLabel scadaPathLabel = new JLabel("Путь к SCADA проекту:");
-        scadaPathEdit = new JTextField();
-        view.addComponent(scadaPathLabel,view.getBottomPanel());
-        view.addComponent(scadaPathEdit,view.getBottomPanel());
+    protected void renderAddButton(View view) {
+        JButton addButton = new JButton("Добавить SCADA проект");
+        addButton.addActionListener(e -> addScada(view));
+        view.addComponent(addButton,view.getBottomPanel());
+    }
 
-        JLabel scadaProjectLabel = new JLabel("Название SCADA проекта:");
-        scadaProjectEdit = new JTextField();
-        view.addComponent(scadaProjectLabel,view.getBottomPanel());
-        view.addComponent(scadaProjectEdit,view.getBottomPanel());
+    protected void addScada(View view) {
+        if (scadaProject != null) {
+            if (scadaProject.updateScadaFields()) {
+                Core.getInstance().getStorage().actionWithStorage(INSERT,scadaProject);
+            } else {
+                JOptionPane.showMessageDialog(view, "Не удалось добавить SCADA проект. Проверьте корректность данных!");
+            }
 
-        JLabel scadaLoginLabel = new JLabel("Логин SCADA проекта:");
-        scadaLoginEdit = new JTextField();
-        view.addComponent(scadaLoginLabel,view.getBottomPanel());
-        view.addComponent(scadaLoginEdit,view.getBottomPanel());
-
-        JLabel scadaPassLabel = new JLabel("Пароль SCADA проекта:");
-        scadaPassEdit = new JTextField();
-        view.addComponent(scadaPassLabel,view.getBottomPanel());
-        view.addComponent(scadaPassEdit,view.getBottomPanel());
-
-        JButton updateButton = new JButton("Добавить SCADA проект");
-        updateButton.addActionListener(e -> addScada());
-        view.addComponent(updateButton,view.getBottomPanel());
+            view.getBottomPanel().removeAll();
+            view.update(view.getBottomPanel());
+        } else {
+            throw new NullPointerException("Адаптер SCADA-системы не найден!");
+        }
     }
 
 }

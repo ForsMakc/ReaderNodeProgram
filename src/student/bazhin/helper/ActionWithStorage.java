@@ -6,6 +6,7 @@ public enum ActionWithStorage {
     UPDATE,
     INSERT,
     DELETE,
-    GET
+    GET,
+    VIEW
 
 }

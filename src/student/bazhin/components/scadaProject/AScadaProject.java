@@ -2,72 +2,57 @@ package student.bazhin.components.scadaProject;
 
 import student.bazhin.core.Core;
 import student.bazhin.core.View;
-import student.bazhin.data.AuthData;
-import student.bazhin.interfaces.IComponent;
 import student.bazhin.interfaces.IData;
 import student.bazhin.interfaces.IVisualComponent;
-import static student.bazhin.helper.ActionWithStorage.DELETE;
-import static student.bazhin.helper.ActionWithStorage.UPDATE;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
+import static student.bazhin.helper.ActionWithStorage.*;
 
 
 public abstract class AScadaProject implements IVisualComponent, Serializable{
 
     protected volatile int id;
-    protected volatile String path;
-    protected volatile String scadaName;
-    protected volatile AuthData authData;
-    protected volatile String scadaProjectName;
     protected volatile boolean status;
+    protected volatile boolean blocking;
+    protected volatile String scadaName;
 
-    protected JTextField scadaPathEdit;
-    protected JTextField scadaProjectEdit;
-    protected JTextField scadaLoginEdit;
-    protected JTextField scadaPassEdit;
+    protected volatile Map<String,String> keys = new HashMap<>();
+    protected volatile Map<String,String> fields = new HashMap<>();
+    protected volatile Map<String,JLabel> labels = new HashMap<>();
+    protected volatile Map<String,JTextField> edits = new HashMap<>();
 
-    public int getId() {
-        return id;
-    }
+    JButton connectionButton;
+    JButton updateButton;
+    JButton delButton;
 
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public void setAuthData(AuthData authData) {
-        this.authData = authData;
-    }
-
-    public void setScadaName(String scadaName) {
+    public AScadaProject(int id, String scadaName) {
+        this.id = id;
+        status = false;
+        blocking = false;
         this.scadaName = scadaName;
-    }
 
-    public void setScadaProjectName(String scadaProjectName) {
-        this.scadaProjectName = scadaProjectName;
-    }
+        keys.put("path","Путь до директории SCADA-проекта");
+        keys.put("scadaProjectName","Название SCADA-проекта");
+        keys.put("login","Логин пользователя SCADA-проекта");
+        keys.put("password","Пароль пользователя SCADA-проекта");
 
-    protected abstract void updateScadaSource();
-
-    public abstract boolean validateScadaData();
-
-    @Override
-    public void render(View view) {
-        if (view != null) {
-            JButton itemButton = new JButton(scadaName + " (" + scadaProjectName + ")");
-            itemButton.setFont(new Font("Arial", Font.BOLD, 20));
-            if (status) {
-                itemButton.setForeground(Color.blue);
-            } else {
-                itemButton.setForeground(Color.red);
-            }
-            itemButton.addActionListener(new ItemClickHandler(this,view));
-            view.addComponent(itemButton,view.getTopPanel());
+        for (String key: keys.keySet()){
+            fields.put(key,"");
+            labels.put(key,new JLabel(keys.get(key)));
+            edits.put(key,new JTextField());
         }
     }
+
+    protected abstract boolean validateScadaData();
+
+    protected abstract boolean connectToScadaProject();
 
     protected abstract class ClickHandler implements ActionListener{
 
@@ -75,10 +60,59 @@ public abstract class AScadaProject implements IVisualComponent, Serializable{
         protected AScadaProject sender;
 
         public ClickHandler(AScadaProject sender, View view) {
-            this.sender = sender;
             this.view = view;
+            this.sender = sender;
         }
 
+    }
+
+    @Override
+    public void render(View view) {
+        if (view != null) {
+            JButton itemButton = new JButton(scadaName + " (" + fields.get("scadaProjectName") + ")");
+            if (status) {
+                itemButton.setForeground(Color.blue);
+            } else {
+                itemButton.setForeground(Color.red);
+            }
+            if (blocking) {
+                itemButton.setFont(new Font("Arial", Font.BOLD, 20));
+            } else {
+                itemButton.setFont(new Font("Arial", Font.ITALIC, 20));
+            }
+            itemButton.addActionListener(new ItemClickHandler(this,view));
+            view.addComponent(itemButton,view.getTopPanel());
+        }
+    }
+
+    public void renderScadaFields(View view) {
+        for (String key: keys.keySet()){
+            JTextField edit = edits.get(key);
+            edit.setText(fields.get(key));
+            view.addComponent(labels.get(key),view.getBottomPanel());
+            view.addComponent(edit,view.getBottomPanel());
+        }
+    }
+
+    public boolean updateScadaFields() {
+        for (String key: keys.keySet()){
+            JTextField edit = edits.get(key);
+            fields.put(key,edit.getText());
+        }
+        return validateScadaData();
+    }
+
+
+    public int getId() {
+        return id;
+    }
+
+    public boolean getStatus() {
+        return status;
+    }
+
+    public boolean getBlockingType() {
+        return blocking;
     }
 
     protected class ItemClickHandler extends ClickHandler  {
@@ -101,36 +135,73 @@ public abstract class AScadaProject implements IVisualComponent, Serializable{
             }
             view.addComponent(scadaStatusLabel,view.getBottomPanel());
 
+            JLabel scadaBlockingLabel;
+            if (blocking) {
+                scadaBlockingLabel = new JLabel("Блокирующий SCADA-проект");
+            } else {
+                scadaBlockingLabel = new JLabel("Неблокирующий SCADA-проект");
+            }
+            view.addComponent(scadaBlockingLabel,view.getBottomPanel());
+
             JLabel scadaNameLabel = new JLabel("Тип SCADA-системы: " + scadaName);
             view.addComponent(scadaNameLabel,view.getBottomPanel());
 
-            JLabel scadaPathLabel = new JLabel("Путь к SCADA проекту:");
-            scadaPathEdit = new JTextField(path);
-            view.addComponent(scadaPathLabel,view.getBottomPanel());
-            view.addComponent(scadaPathEdit,view.getBottomPanel());
+            renderScadaFields(view);
 
-            JLabel scadaProjectLabel = new JLabel("Название SCADA проекта:");
-            scadaProjectEdit = new JTextField(scadaProjectName);
-            view.addComponent(scadaProjectLabel,view.getBottomPanel());
-            view.addComponent(scadaProjectEdit,view.getBottomPanel());
+            if (status) {
+                connectionButton = new JButton("Отключить SCADA проект");
+                connectionButton.addActionListener(new DisconnectClickHandler(sender,view));
+            } else {
+                connectionButton = new JButton("Подключить SCADA проект");
+                connectionButton.addActionListener(new ConnectClickHandler(sender,view));
+            }
+            view.addComponent(connectionButton,view.getBottomPanel());
 
-            JLabel scadaLoginLabel = new JLabel("Логин SCADA проекта:");
-            scadaLoginEdit = new JTextField(authData.getLogin());
-            view.addComponent(scadaLoginLabel,view.getBottomPanel());
-            view.addComponent(scadaLoginEdit,view.getBottomPanel());
-
-            JLabel scadaPassLabel = new JLabel("Пароль SCADA проекта:");
-             scadaPassEdit = new JTextField(authData.getPassword());
-            view.addComponent(scadaPassLabel,view.getBottomPanel());
-            view.addComponent(scadaPassEdit,view.getBottomPanel());
-
-            JButton updateButton = new JButton("Обновить SCADA проект");
+            updateButton = new JButton("Обновить SCADA проект");
             updateButton.addActionListener(new UpdateClickHandler(sender,view));
             view.addComponent(updateButton,view.getBottomPanel());
 
-            JButton delButton = new JButton("Удалить SCADA проект");
+            delButton = new JButton("Удалить SCADA проект");
             delButton.addActionListener(new DeleteClickHandler(sender,view));
             view.addComponent(delButton,view.getBottomPanel());
+        }
+
+    }
+
+    protected class DisconnectClickHandler extends ClickHandler  {
+
+        public DisconnectClickHandler(AScadaProject sender, View view) {
+            super(sender,view);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            status = false;
+            Core.getInstance().getStorage().actionWithStorage(VIEW,null);
+            view.getBottomPanel().removeAll();
+            view.update(view.getBottomPanel());
+            JOptionPane.showMessageDialog(view, "SCADA проект успешно отключён!");
+        }
+
+    }
+
+    protected class ConnectClickHandler extends ClickHandler  {
+
+        public ConnectClickHandler(AScadaProject sender, View view) {
+            super(sender,view);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (connectToScadaProject()) {
+                status = true;
+                Core.getInstance().getStorage().actionWithStorage(VIEW,null);
+                view.getBottomPanel().removeAll();
+                view.update(view.getBottomPanel());
+                JOptionPane.showMessageDialog(view, "SCADA проект успешно подключён!");
+            } else {
+                JOptionPane.showMessageDialog(view, "Не удалось подключить SCADA проект!");
+            }
         }
 
     }
@@ -158,33 +229,17 @@ public abstract class AScadaProject implements IVisualComponent, Serializable{
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            status = false; //todo надо обязательно вернуть в статус true, если апдейт удался
+            status = false;
             view.getBottomPanel().removeAll();
             view.update(view.getBottomPanel());
             Core.getInstance().getStorage().actionWithStorage(UPDATE, () -> {
-                String newPath = scadaPathEdit.getText();
-                if (!newPath.equals(path)) {
-                    path = newPath;
-                }
-
-                String newProjectName = scadaProjectEdit.getText();
-                if (!newProjectName.equals(scadaProjectName)) {
-                    scadaProjectName = newProjectName;
-                }
-
-                String newLogin = scadaLoginEdit.getText();
-                if (!newLogin.equals(authData.getLogin())) {
-                    authData.setLogin(newLogin);
-                }
-
-                String newPassword = scadaPassEdit.getText();
-                if (!newPassword.equals(authData.getPassword())) {
-                    authData.setPassword(newPassword);
-                }
-
-                updateScadaSource();
-
-                return null;
+                boolean canUpdate = updateScadaFields();
+                return (!canUpdate) ? null : new IData() {
+                    @Override
+                    public String toString() {
+                        return "IData";
+                    }
+                };
             });
         }
 

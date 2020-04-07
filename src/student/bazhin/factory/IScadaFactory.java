@@ -4,6 +4,6 @@ import student.bazhin.components.scadaProject.AScadaProject;
 
 public interface IScadaFactory {
 
-    public AScadaProject createScadaProject();
+    public AScadaProject createScadaProject(String scadaSystemName);
 
 }

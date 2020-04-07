@@ -11,7 +11,7 @@ public class ScadaFactory {
     public static AScadaProject createScadaProject(String scadaSystemName) {
         switch (scadaSystemName) {
             case "Master Scada 3.x": {
-                return new MasterScada3Factory().createScadaProject();
+                return new MasterScada3Factory().createScadaProject(scadaSystemName);
             }
             default: {
                 return null;

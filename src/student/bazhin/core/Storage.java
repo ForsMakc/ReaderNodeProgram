@@ -5,6 +5,7 @@ import student.bazhin.helper.ActionWithStorage;
 import student.bazhin.interfaces.IComponent;
 import student.bazhin.interfaces.IVisual;
 
+import javax.swing.*;
 import java.io.*;
 import java.util.Vector;
 
@@ -12,13 +13,11 @@ public class Storage implements IVisual {
 
     protected final String STORAGE_FILE_PATH = "res/scada.ser";
     protected Vector<AScadaProject> scadaProjectsStorage;
+    protected int maxId = 0;
 
     public Storage() {
         scadaProjectsStorage = new Vector<>();
         deserialize();
-        for (AScadaProject scadaProject: scadaProjectsStorage) {
-            scadaProject.validateScadaData();
-        }
         render(Core.getInstance().getView());
     }
 
@@ -43,33 +42,47 @@ public class Storage implements IVisual {
             }
             case UPDATE: {
                 if (component != null) {
-                    component.perform();
-                    updateScadaProjects();
+                    if ((component.perform() != null)) {
+                        updateScadaProjects();
+                        JOptionPane.showMessageDialog(Core.getInstance().getView(), "SCADA проект успешно обновлён!");
+                    } else {
+                        refresh();
+                        JOptionPane.showMessageDialog(Core.getInstance().getView(), "Не удалось обновить SCADA проект. Проверьте корректность данных!");
+                    }
                 }
                 break;
+            }
+            case VIEW: {
+                render(Core.getInstance().getView());
             }
         }
         return null;
     }
 
     public int getNewId() {
-        int maxId = 0;
-        for (AScadaProject scadaProject: scadaProjectsStorage) {
-            if (maxId < scadaProject.getId()) {
-                maxId = scadaProject.getId();
+        return maxId;
+    }
+
+    protected void updateNewId() {
+        maxId = 0;
+        for (AScadaProject sp: scadaProjectsStorage) {
+            if (maxId < sp.getId()) {
+                maxId = sp.getId();
             }
         }
-        return maxId + 1;
+        maxId++;
     }
 
     protected void insertScadaProject(AScadaProject scadaProject) {
         scadaProjectsStorage.add(scadaProject);
         updateScadaProjects();
+        updateNewId();
     }
 
     protected void removeScadaProject(AScadaProject scadaProject) {
         scadaProjectsStorage.remove(scadaProject);
         updateScadaProjects();
+        updateNewId();
     }
 
     protected void updateScadaProjects() {

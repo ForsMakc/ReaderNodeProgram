@@ -2,14 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7d65a3cc-6250-4fad-a9dd-ebf4f5f58089" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/student/bazhin/helper/ActionWithStorage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/res/scada.ser" beforeDir="false" afterPath="$PROJECT_DIR$/res/scada.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/student/bazhin/components/Connector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/components/Connector.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/student/bazhin/components/Registrar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/components/Registrar.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/student/bazhin/components/scadaProject/AScadaProject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/components/scadaProject/AScadaProject.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/student/bazhin/components/scadaProject/MasterScada3Project.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/components/scadaProject/MasterScada3Project.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/student/bazhin/core/ComponentsLoop.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/student/bazhin/core/Storage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/core/Storage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/student/bazhin/data/AuthData.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/student/bazhin/factory/IScadaFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/factory/IScadaFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/student/bazhin/factory/MasterScada3Factory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/factory/MasterScada3Factory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/student/bazhin/factory/ScadaFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/factory/ScadaFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/student/bazhin/helper/ActionWithStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/helper/ActionWithStorage.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,7 +138,14 @@
       <option name="project" value="LOCAL" />
       <updated>1586041800225</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Продолжение разработки компонента соединителя, добавлена синхронизация потоков">
+      <created>1586084878843</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1586084878843</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -159,7 +170,8 @@
     <MESSAGE value="Создение функционала для добавления, изменения, удаления объекта SCADA. Создание фабрик объектов SCADA" />
     <MESSAGE value="Создение компонента соединителя" />
     <MESSAGE value="Продолжение разработки компонента соединителя, добавлена работа с сервером" />
-    <option name="LAST_COMMIT_MESSAGE" value="Продолжение разработки компонента соединителя, добавлена работа с сервером" />
+    <MESSAGE value="Продолжение разработки компонента соединителя, добавлена синхронизация потоков" />
+    <option name="LAST_COMMIT_MESSAGE" value="Продолжение разработки компонента соединителя, добавлена синхронизация потоков" />
   </component>
   <component name="WindowStateProjectService">
     <state x="552" y="177" key="#Inspections" timestamp="1585647915811">
@@ -174,10 +186,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="720" y="322" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1585676107799" />
-    <state x="765" y="228" key="#com.intellij.ide.util.MemberChooser" timestamp="1586075267313">
+    <state x="765" y="228" key="#com.intellij.ide.util.MemberChooser" timestamp="1586283095812">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="765" y="228" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1586075267313" />
+    <state x="765" y="228" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1586283095812" />
     <state x="756" y="404" width="407" height="241" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1585667744859">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -186,10 +198,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="714" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1586009002498" />
-    <state x="562" y="113" width="1187" height="813" key="CommitChangelistDialog2" timestamp="1586041798804">
+    <state x="562" y="113" width="1187" height="813" key="CommitChangelistDialog2" timestamp="1586084873630">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="562" y="113" width="1187" height="813" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1586041798804" />
+    <state x="562" y="113" width="1187" height="813" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1586084873630" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1585603020845">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -198,38 +210,38 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="740" y="274" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1586013871628" />
-    <state width="1876" height="207" key="GridCell.Tab.0.bottom" timestamp="1586081355213">
+    <state width="1876" height="207" key="GridCell.Tab.0.bottom" timestamp="1586287888628">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="207" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1586081355213" />
-    <state width="1876" height="207" key="GridCell.Tab.0.center" timestamp="1586081355213">
+    <state width="1876" height="207" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1586287888628" />
+    <state width="1876" height="207" key="GridCell.Tab.0.center" timestamp="1586287888628">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="207" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1586081355213" />
-    <state width="1876" height="207" key="GridCell.Tab.0.left" timestamp="1586081355213">
+    <state width="1876" height="207" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1586287888628" />
+    <state width="1876" height="207" key="GridCell.Tab.0.left" timestamp="1586287888628">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="207" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1586081355213" />
-    <state width="1876" height="207" key="GridCell.Tab.0.right" timestamp="1586081355213">
+    <state width="1876" height="207" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1586287888628" />
+    <state width="1876" height="207" key="GridCell.Tab.0.right" timestamp="1586287888628">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="207" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1586081355213" />
-    <state width="1876" height="207" key="GridCell.Tab.1.bottom" timestamp="1586081355214">
+    <state width="1876" height="207" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1586287888628" />
+    <state width="1876" height="207" key="GridCell.Tab.1.bottom" timestamp="1586287888629">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="207" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1586081355214" />
-    <state width="1876" height="207" key="GridCell.Tab.1.center" timestamp="1586081355214">
+    <state width="1876" height="207" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1586287888629" />
+    <state width="1876" height="207" key="GridCell.Tab.1.center" timestamp="1586287888628">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="207" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1586081355214" />
-    <state width="1876" height="207" key="GridCell.Tab.1.left" timestamp="1586081355214">
+    <state width="1876" height="207" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1586287888628" />
+    <state width="1876" height="207" key="GridCell.Tab.1.left" timestamp="1586287888628">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="207" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1586081355214" />
-    <state width="1876" height="207" key="GridCell.Tab.1.right" timestamp="1586081355214">
+    <state width="1876" height="207" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1586287888628" />
+    <state width="1876" height="207" key="GridCell.Tab.1.right" timestamp="1586287888629">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="207" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1586081355214" />
+    <state width="1876" height="207" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1586287888629" />
     <state width="900" height="203" key="GridCell.Tab.2.bottom" timestamp="1586079119749">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -246,14 +258,14 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="900" height="203" key="GridCell.Tab.2.right/0.0.1920.1040@0.0.1920.1040" timestamp="1586079119749" />
-    <state x="552" y="252" key="Vcs.Push.Dialog.v2" timestamp="1586041806454">
+    <state x="552" y="252" key="Vcs.Push.Dialog.v2" timestamp="1586084894104">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="252" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1586041806454" />
-    <state x="657" y="295" width="609" height="380" key="com.intellij.ide.util.TipDialog" timestamp="1586073418257">
+    <state x="552" y="252" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1586084894104" />
+    <state x="657" y="295" width="609" height="380" key="com.intellij.ide.util.TipDialog" timestamp="1586268223626">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="657" y="295" width="609" height="380" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1586073418257" />
+    <state x="657" y="295" width="609" height="380" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1586268223626" />
     <state x="184" y="412" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD" timestamp="1586080214706">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -282,6 +294,17 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1585696178694" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/student/bazhin/components/scadaProject/AScadaProject.java</url>
+          <line>223</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/ReaderNodeProgram$Main.ic" NAME="Main Coverage Results" MODIFIED="1585689927418" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
