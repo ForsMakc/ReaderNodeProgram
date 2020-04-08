@@ -1,6 +1,7 @@
-package student.bazhin.factory;
+package student.bazhin.factory.scada;
 
 import student.bazhin.components.scadaProject.AScadaProject;
+import student.bazhin.factory.scada.MasterScada3Factory;
 
 public class ScadaFactory {
 

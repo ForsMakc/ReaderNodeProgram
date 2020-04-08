@@ -85,7 +85,7 @@ public abstract class AScadaProject implements IVisualComponent, Serializable{
         //todo получать данные scada проекта
         if (status) {
             APoller aPoller = createScadaPoller();
-            aPoller.perform();
+            scadaData = (ScadaData)aPoller.perform();
             AConverter aConverter = createDataConverter();
             return aConverter.perform();
         } else {

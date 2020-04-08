@@ -106,28 +106,23 @@ public class MasterScada3Project extends AScadaProject implements Serializable {
     protected class Poller extends APoller {
 
         //todo В ОПИСАНИЕ АЛГОРИТОМВ
-        protected String getDirFiles(String path, int level, List<String> improper) {
-            int fileCount = 0;
+        protected ArrayList<String> getDirFiles(String path, List<String> improper, String rootFolder, int level) {
             File folder = new File(path);
-            StringBuilder result = new StringBuilder();
+            ArrayList<String> findObjects, curObjects = new ArrayList<>();
             for (File file : Objects.requireNonNull(folder.listFiles())) {
                 if ((file.isDirectory()) && (!improper.contains(file.getName()))) {
-                    String comma = "";
-                    String bracketL = "";
-                    String bracketR = "";
-                    if (Arrays.asList(Objects.requireNonNull(folder.listFiles())).indexOf(file) == 0) {
-                        bracketL = ": [";
-                    } else {
-                        comma = ", ";
-                        if (Arrays.asList(Objects.requireNonNull(folder.listFiles())).indexOf(file) == Objects.requireNonNull(folder.listFiles()).length) {
-                            bracketR = "]";
-                        }
+                    if ((level == 0) && (!rootFolder.equals(file.getName()))) {
+                        continue;
                     }
-                    result.append(bracketL).append(comma).append("\"").append(file.getName()).append("\"").append(getDirFiles(path + "/" + file.getName(),++level,improper)).append(bracketR);
-                    fileCount++;
+                    findObjects = getDirFiles(file.toString(),improper,rootFolder,++level);
+                    if (findObjects.size() == 0) {
+                        curObjects.add("\"" + file.getName() + "\" : \"\"");
+                    } else {
+                        curObjects.add("\"" + file.getName() + "\" : { " + String.join(" , ",findObjects) + " }");
+                    }
                 }
             }
-            return result.toString();
+            return curObjects;
         }
 
         @Override
@@ -135,9 +130,7 @@ public class MasterScada3Project extends AScadaProject implements Serializable {
             //Сбор структуры
             int level = 0;
             List<String> improper = Arrays.asList("Мнемосхема","__Data","__Event","Отчет~","Журнал~","Тренды~","Рецепт","Окно объекта","Неквитированные сообщения","Активные сообщения","Изображение объекта","Основной журнал");
-            String fileObjectsJsonStr = "\"Объект\"" + getDirFiles(fields.get("path" + "/Объект"),level,improper);
-            String fileSystemJsonStr = "\"Система\"" + getDirFiles(fields.get("path" + "/Объект"),level,improper);
-            String structJsonStr = "\"struct\":[" + fileObjectsJsonStr + " " + fileSystemJsonStr + "]";
+            String structJsonStr = "\"struct\" : {" + getDirFiles(fields.get("path"),improper,"Объект",0).get(0) + "}";
 
             //Сбор данных БД
             String mapJsonStr = "\"map\":[]";
@@ -149,14 +142,14 @@ public class MasterScada3Project extends AScadaProject implements Serializable {
                 BufferedImage scadaGrab = grabScreen();
                 if (scadaGrab != null) {
                     ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    ImageIO.write(scadaGrab, "png", bos);
+                    ImageIO.write(scadaGrab, "jpg", bos);
                     byte[] byteData = bos.toByteArray();
                     strData = new String(byteData,StandardCharsets.UTF_8);
                 }
             } catch (IOException e) {
                 System.out.println("IO exception" + e);
             }
-            String binJsonStr = "\"bin\":[\"res\":[],\"frame\":\"" + strData + "\"]";
+            String binJsonStr = "\"bin\" : { \"res\" : {}, \"frame\" : \"" + strData + "\"}";
 
             return new ScadaData(structJsonStr,mapJsonStr,dataJsonStr,binJsonStr);
         }
@@ -167,25 +160,28 @@ public class MasterScada3Project extends AScadaProject implements Serializable {
 
         @Override
         public IData perform() {
-            StringBuilder metaJsonStr = new StringBuilder("\"meta\" : [");
+            StringBuilder metaJsonStr = new StringBuilder("\"meta\" : {");
             int count = 0;
-            String comma = "";
+            String comma;
             for (String key: keys.keySet()){
-                comma = (count == 0) ? "" : ",";
+                comma = (count == 0) ? "" : ", ";
                 if (Arrays.asList("scadaProjectName","login","password").contains(key)) {
-                    metaJsonStr.append(comma).append("\"").append(key).append("\"").append(":").append("\"").append(fields.get(key)).append("\"");
+                    metaJsonStr.append(comma).append("\"").append(key).append("\"").append(" : ").append("\"").append(fields.get(key)).append("\"");
+                    count++;
                 }
-                count++;
             }
-            metaJsonStr.append(",\"scadaId\":\"").append(id).append("\"").append(",\"nodeId\":\"").append(Core.getInstance().getNodeId()).append("\"");
-            metaJsonStr.append(",\"timestamp\":\"").append(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date())).append("\"]");
-            scadaData.scadaDataList.add(metaJsonStr.toString());
+            metaJsonStr.append(", \"scadaId\" : \"").append(id).append("\" ");
+            metaJsonStr.append(", \"nodeId\" : \"").append(Core.getInstance().getNodeId()).append("\" ");
+            metaJsonStr.append(", \"timestamp\" : \"").append(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date())).append("\" ");
+            metaJsonStr.append("}");
+            scadaData.scadaDataList.add(String.valueOf(metaJsonStr));
 
             StringBuilder pocket = new StringBuilder();
-            pocket.append("\"type\":\"data\"");
+            pocket.append("{ \"type\" : \"data\"");
             for (String jsonStr: scadaData.scadaDataList) {
-                pocket.append(",").append(jsonStr);
+                pocket.append(", ").append(jsonStr);
             }
+            pocket.append("}");
 
             return new PocketData(pocket.toString());
         }

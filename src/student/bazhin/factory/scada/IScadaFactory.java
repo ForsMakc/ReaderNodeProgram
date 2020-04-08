@@ -1,4 +1,4 @@
-package student.bazhin.factory;
+package student.bazhin.factory.scada;
 
 import student.bazhin.components.scadaProject.AScadaProject;
 

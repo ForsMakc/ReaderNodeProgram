@@ -29,6 +29,7 @@ public class Connector implements IComponent {
             Core.getInstance().getView().setConnectionInfo(true);
             startSending();
         }
+        startSending();
         return null;
     }
 
@@ -74,13 +75,14 @@ public class Connector implements IComponent {
 
     protected void startSending() {
         new Thread(() -> {
-            while (haveConnection()) {
+//            while (haveConnection()) {
+            while (true) {
                 try {
                     Core.getInstance().getStorage().actionWithStorage(CALLBACK, () -> {
                         Vector<AScadaProject> scadaProjectsStorage;
                         scadaProjectsStorage = Core.getInstance().getStorage().actionWithStorage(GET,null);
                         for (AScadaProject scadaProject : scadaProjectsStorage) {
-                            if (haveConnection()) {
+//                            if (haveConnection()) {
                                 PocketData data = (PocketData)scadaProject.perform();
                                 // PocketData response = sendDataToServer(data);
                                 PocketData response = null;
@@ -90,9 +92,9 @@ public class Connector implements IComponent {
                                 if (response != null) {
                                     //todo обработка ответа сервера
                                 }
-                            } else {
-                                break;
-                            }
+//                            } else {
+//                                break;
+//                            }
                         }
                         return null;
                     });
