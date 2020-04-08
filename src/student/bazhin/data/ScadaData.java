@@ -2,27 +2,16 @@ package student.bazhin.data;
 
 import student.bazhin.interfaces.IData;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class ScadaData implements IData {
 
-    protected String scadaData;
-    protected String nl = System.getProperty("line.separator");
+    public ArrayList<String> scadaDataList;
 
-    public ScadaData(String scadaData) {
-        this.scadaData = scadaData + nl;
+    public ScadaData(String... data){
+        scadaDataList = new ArrayList<>();
+        Collections.addAll(scadaDataList, data);
     }
 
-    public ScadaData add(String s) {
-        scadaData = scadaData + s + nl;
-        return this;
-    }
-
-    public ScadaData clear() {
-        scadaData = "";
-        return this;
-    }
-
-    @Override
-    public String toString() {
-        return scadaData;
-    }
 }

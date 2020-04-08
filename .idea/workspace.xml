@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7d65a3cc-6250-4fad-a9dd-ebf4f5f58089" name="Default Changelist" comment="">
+    <list default="true" id="7d65a3cc-6250-4fad-a9dd-ebf4f5f58089" name="Default Changelist" comment="До">
+      <change afterPath="$PROJECT_DIR$/src/student/bazhin/data/PocketData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/Fors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/Fors.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/scada.ser" beforeDir="false" afterPath="$PROJECT_DIR$/res/scada.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/student/bazhin/components/Registrar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/components/Registrar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ReaderNodeProgram.iml" beforeDir="false" afterPath="$PROJECT_DIR$/ReaderNodeProgram.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/student/bazhin/components/Connector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/components/Connector.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/student/bazhin/components/scadaProject/AScadaProject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/components/scadaProject/AScadaProject.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/student/bazhin/components/scadaProject/MasterScada3Project.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/components/scadaProject/MasterScada3Project.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/student/bazhin/core/ComponentsLoop.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/student/bazhin/core/Storage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/core/Storage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/student/bazhin/data/AuthData.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/student/bazhin/factory/IScadaFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/factory/IScadaFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/student/bazhin/factory/MasterScada3Factory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/factory/MasterScada3Factory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/student/bazhin/factory/ScadaFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/factory/ScadaFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/student/bazhin/helper/ActionWithStorage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/helper/ActionWithStorage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/student/bazhin/core/Core.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/core/Core.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/student/bazhin/data/ScadaData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/data/ScadaData.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,9 +23,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Interface" />
         <option value="Enum" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -53,6 +50,10 @@
     <property name="Repository.Attach.Sources" value="false" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/gson-2.2.3.jar!/" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
   </component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true">
@@ -145,7 +146,14 @@
       <option name="project" value="LOCAL" />
       <updated>1586084878843</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Обновление подхода реализации графичиских элементов, доработка аспекторв работы с scada сущностями">
+      <created>1586287981151</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1586287981151</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -171,25 +179,30 @@
     <MESSAGE value="Создение компонента соединителя" />
     <MESSAGE value="Продолжение разработки компонента соединителя, добавлена работа с сервером" />
     <MESSAGE value="Продолжение разработки компонента соединителя, добавлена синхронизация потоков" />
-    <option name="LAST_COMMIT_MESSAGE" value="Продолжение разработки компонента соединителя, добавлена синхронизация потоков" />
+    <MESSAGE value="Обновление подхода реализации графичиских элементов, доработка аспекторв работы с scada сущностями" />
+    <option name="LAST_COMMIT_MESSAGE" value="Обновление подхода реализации графичиских элементов, доработка аспекторв работы с scada сущностями" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="552" y="177" key="#Inspections" timestamp="1585647915811">
+    <state x="552" y="177" key="#Inspections" timestamp="1586303058026">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="177" key="#Inspections/0.0.1920.1040@0.0.1920.1040" timestamp="1585647915811" />
+    <state x="552" y="177" key="#Inspections/0.0.1920.1040@0.0.1920.1040" timestamp="1586303058026" />
     <state x="552" y="177" key="#Servers" timestamp="1585602759752">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="177" key="#Servers/0.0.1920.1040@0.0.1920.1040" timestamp="1585602759752" />
+    <state x="690" y="274" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog" timestamp="1586303587331">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="690" y="274" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1586303587331" />
     <state x="720" y="322" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1585676107799">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="720" y="322" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1585676107799" />
-    <state x="765" y="228" key="#com.intellij.ide.util.MemberChooser" timestamp="1586283095812">
+    <state x="765" y="228" key="#com.intellij.ide.util.MemberChooser" timestamp="1586304471299">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="765" y="228" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1586283095812" />
+    <state x="765" y="228" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1586304471299" />
     <state x="756" y="404" width="407" height="241" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1585667744859">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -198,18 +211,18 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="714" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1586009002498" />
-    <state x="562" y="113" width="1187" height="813" key="CommitChangelistDialog2" timestamp="1586084873630">
+    <state x="562" y="113" width="1187" height="813" key="CommitChangelistDialog2" timestamp="1586304091723">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="562" y="113" width="1187" height="813" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1586084873630" />
+    <state x="562" y="113" width="1187" height="813" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1586304091723" />
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog" timestamp="1585603020845">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="92" y="92" width="1736" height="856" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1585603020845" />
-    <state x="740" y="274" key="FileChooserDialogImpl" timestamp="1586013871628">
+    <state x="740" y="274" key="FileChooserDialogImpl" timestamp="1586297951603">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="740" y="274" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1586013871628" />
+    <state x="740" y="274" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1586297951603" />
     <state width="1876" height="207" key="GridCell.Tab.0.bottom" timestamp="1586287888628">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -258,10 +271,14 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="900" height="203" key="GridCell.Tab.2.right/0.0.1920.1040@0.0.1920.1040" timestamp="1586079119749" />
-    <state x="552" y="252" key="Vcs.Push.Dialog.v2" timestamp="1586084894104">
+    <state x="440" y="93" key="SettingsEditor" timestamp="1586297966125">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="252" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1586084894104" />
+    <state x="440" y="93" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1586297966125" />
+    <state x="552" y="252" key="Vcs.Push.Dialog.v2" timestamp="1586287992214">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="552" y="252" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1586287992214" />
     <state x="657" y="295" width="609" height="380" key="com.intellij.ide.util.TipDialog" timestamp="1586268223626">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -300,8 +317,8 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/student/bazhin/components/scadaProject/AScadaProject.java</url>
-          <line>223</line>
-          <option name="timeStamp" value="27" />
+          <line>238</line>
+          <option name="timeStamp" value="31" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

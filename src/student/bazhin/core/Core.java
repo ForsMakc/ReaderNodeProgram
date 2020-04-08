@@ -40,4 +40,7 @@ public class Core{
         return connector;
     }
 
+    public String getNodeId() {
+        return null;
+    }
 }

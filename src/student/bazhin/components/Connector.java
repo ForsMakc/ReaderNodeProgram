@@ -2,7 +2,7 @@ package student.bazhin.components;
 
 import student.bazhin.components.scadaProject.AScadaProject;
 import student.bazhin.core.Core;
-import student.bazhin.data.ScadaData;
+import student.bazhin.data.PocketData;
 import student.bazhin.interfaces.IComponent;
 import student.bazhin.interfaces.IData;
 
@@ -61,14 +61,14 @@ public class Connector implements IComponent {
     }
 
     protected boolean haveConnection() {
-        return sendDataToServer(new ScadaData("test")) != null;
+        return sendDataToServer(new PocketData("test")) != null;
     }
 
-    protected ScadaData getInitData() {
-        return new ScadaData("Hello!");
+    protected PocketData getInitData() {
+        return new PocketData("Hello!");
     }
 
-    protected void handleInitResponse(ScadaData initResponse) {
+    protected void handleInitResponse(PocketData initResponse) {
         //todo обработка ответа инициализации сервера
     }
 
@@ -81,9 +81,9 @@ public class Connector implements IComponent {
                         scadaProjectsStorage = Core.getInstance().getStorage().actionWithStorage(GET,null);
                         for (AScadaProject scadaProject : scadaProjectsStorage) {
                             if (haveConnection()) {
-                                ScadaData data = (ScadaData)scadaProject.perform();
-                                // ScadaData response = sendDataToServer(data);
-                                ScadaData response = null;
+                                PocketData data = (PocketData)scadaProject.perform();
+                                // PocketData response = sendDataToServer(data);
+                                PocketData response = null;
                                 if (data != null) {
                                     response = sendDataToServer(data.add(" Номер скада проекта: " + scadaProjectsStorage.indexOf(scadaProject)));
                                 }
@@ -103,7 +103,7 @@ public class Connector implements IComponent {
         }).start();
     }
 
-    protected ScadaData sendDataToServer(ScadaData dataToServer) {
+    protected PocketData sendDataToServer(PocketData dataToServer) {
         if (dataToServer != null) {
             try {
                 serverOut.println(dataToServer);
@@ -115,7 +115,7 @@ public class Connector implements IComponent {
                     serverResponse.append(line);
                 }
                 System.out.println("Данные получены:" + serverResponse);
-                return new ScadaData(serverResponse.toString());
+                return new PocketData(serverResponse.toString());
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("Ошибка соединения с сервером");

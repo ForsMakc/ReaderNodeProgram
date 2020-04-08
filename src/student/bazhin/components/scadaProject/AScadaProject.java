@@ -2,6 +2,9 @@ package student.bazhin.components.scadaProject;
 
 import student.bazhin.core.Core;
 import student.bazhin.core.View;
+import student.bazhin.data.PocketData;
+import student.bazhin.data.ScadaData;
+import student.bazhin.interfaces.IComponent;
 import student.bazhin.interfaces.IData;
 import student.bazhin.interfaces.IVisualComponent;
 
@@ -17,6 +20,8 @@ import static student.bazhin.helper.ActionWithStorage.*;
 
 
 public abstract class AScadaProject implements IVisualComponent, Serializable{
+
+    ScadaData scadaData = null;
 
     protected volatile int id;
     protected volatile boolean status;
@@ -54,6 +59,14 @@ public abstract class AScadaProject implements IVisualComponent, Serializable{
 
     protected abstract boolean connectToScadaProject();
 
+    protected abstract APoller createScadaPoller();
+
+    protected abstract AConverter createDataConverter();
+
+    protected abstract class APoller implements IComponent{}
+
+    protected abstract class AConverter implements IComponent{}
+
     protected abstract class ClickHandler implements ActionListener{
 
         protected View view;
@@ -64,6 +77,20 @@ public abstract class AScadaProject implements IVisualComponent, Serializable{
             this.sender = sender;
         }
 
+    }
+
+
+    @Override
+    public IData perform() {
+        //todo получать данные scada проекта
+        if (status) {
+            APoller aPoller = createScadaPoller();
+            aPoller.perform();
+            AConverter aConverter = createDataConverter();
+            return aConverter.perform();
+        } else {
+            return null;
+        }
     }
 
     @Override
