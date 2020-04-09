@@ -3,7 +3,8 @@ package student.bazhin.components.scadaProject;
 import student.bazhin.core.Core;
 import student.bazhin.data.PocketData;
 import student.bazhin.data.ScadaData;
-import student.bazhin.interfaces.IComponent;
+import student.bazhin.databases.ADatabase;
+import student.bazhin.factory.database.DBCFactory;
 import student.bazhin.interfaces.IData;
 
 import java.io.ByteArrayOutputStream;
@@ -27,9 +28,14 @@ import java.util.*;
 import static student.bazhin.helper.ActionWithStorage.GET;
 
 public class MasterScada3Project extends AScadaProject implements Serializable {
+
+    ADatabase database;
+    protected static final String DATABASE_TYPE_NAME = "Firebird";
+
     public MasterScada3Project(int id, String scadaName) {
         super(id,scadaName);
         blocking = true;
+        database = DBCFactory.createDBConnection(DATABASE_TYPE_NAME);
 
         keys.put("dataBasePath","Путь до базы данных SCADA-проекта");
         fields.put("dataBasePath","");
@@ -37,7 +43,7 @@ public class MasterScada3Project extends AScadaProject implements Serializable {
         edits.put("dataBasePath",new JTextField());
     }
 
-    private static BufferedImage grabScreen() {
+    protected static BufferedImage grabScreen() {
         try {
             return new Robot().createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize())) ;
         } catch (SecurityException | AWTException e) {
@@ -135,6 +141,7 @@ public class MasterScada3Project extends AScadaProject implements Serializable {
             //Сбор данных БД
             String mapJsonStr = "\"map\":[]";
             String dataJsonStr = "\"data\":[]";
+            readDBData(structJsonStr,mapJsonStr,dataJsonStr);
 
             //Сбор бинарных данных
             String strData = "";
@@ -152,6 +159,10 @@ public class MasterScada3Project extends AScadaProject implements Serializable {
             String binJsonStr = "\"bin\" : { \"res\" : {}, \"frame\" : \"" + strData + "\"}";
 
             return new ScadaData(structJsonStr,mapJsonStr,dataJsonStr,binJsonStr);
+        }
+
+        protected void readDBData(String structJsonStr, String mapJsonStr, String dataJsonStr) {
+            database = null;
         }
 
     }

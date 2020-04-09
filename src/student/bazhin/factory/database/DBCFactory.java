@@ -1,7 +1,7 @@
-package student.bazhin.databases;
+package student.bazhin.factory.database;
 
 
-import student.bazhin.factory.database.FirebirdDBCFactory;
+import student.bazhin.databases.ADatabase;
 
 public class DBCFactory {
 
@@ -9,7 +9,7 @@ public class DBCFactory {
         "Firebird"
     };
 
-    public static ADatabase createScadaProject(String dbType) {
+    public static ADatabase createDBConnection(String dbType) {
         switch (dbType) {
             case "Firebird": {
                 return new FirebirdDBCFactory().createDBConnection();

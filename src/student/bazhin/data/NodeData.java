@@ -3,7 +3,7 @@ package student.bazhin.data;
 import java.util.HashMap;
 
 public class NodeData {
-    private static NodeData instance;
+    protected static NodeData instance;
     protected String identificationKey;
     protected HashMap<String,String> nodeData;
 

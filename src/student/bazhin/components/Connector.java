@@ -29,7 +29,7 @@ public class Connector implements IComponent {
             Core.getInstance().getView().setConnectionInfo(true);
             startSending();
         }
-        startSending();
+//        startSending();
         return null;
     }
 

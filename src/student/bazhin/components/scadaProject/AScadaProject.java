@@ -4,9 +4,7 @@ import student.bazhin.core.Core;
 import student.bazhin.core.View;
 import student.bazhin.data.PocketData;
 import student.bazhin.data.ScadaData;
-import student.bazhin.interfaces.IComponent;
-import student.bazhin.interfaces.IData;
-import student.bazhin.interfaces.IVisualComponent;
+import student.bazhin.interfaces.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -63,9 +61,9 @@ public abstract class AScadaProject implements IVisualComponent, Serializable{
 
     protected abstract AConverter createDataConverter();
 
-    protected abstract class APoller implements IComponent{}
+    protected abstract class APoller implements IComponent {}
 
-    protected abstract class AConverter implements IComponent{}
+    protected abstract class AConverter implements IComponent {}
 
     protected abstract class ClickHandler implements ActionListener{
 

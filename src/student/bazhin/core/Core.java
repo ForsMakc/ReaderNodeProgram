@@ -1,6 +1,7 @@
 package student.bazhin.core;
 
 import student.bazhin.components.Connector;
+import student.bazhin.data.NodeData;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -22,24 +23,13 @@ public class Core{
         storage = new Storage();
         connector = new Connector();
         connector.perform();
+        NodeData.getInstance("1234");
     }
 
     public static Core getInstance() {
         if (instance == null) {
             instance = new Core();
             instance.init();
-            try {
-
-                String DRIVER = "org.firebirdsql.jdbc.FBDriver";
-                String url = "jdbc:firebirdsql:localhost/3050:C:\\MasterSCADA Projects\\Projects\\Test\\ARCHIVE.FDB";
-                String login = "SYSDBA";
-                String password = "masterkey";
-                Class.forName(DRIVER);
-                Connection dbConnection = DriverManager.getConnection(url,login,password);
-
-            } catch (SQLException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
         }
         return instance;
     }
@@ -57,6 +47,6 @@ public class Core{
     }
 
     public String getNodeId() {
-        return null;
+        return NodeData.getInstance().getIdentificationKey();
     }
 }
