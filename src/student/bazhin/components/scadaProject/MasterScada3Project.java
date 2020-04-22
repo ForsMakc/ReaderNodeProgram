@@ -139,19 +139,19 @@ public class MasterScada3Project extends AScadaProject implements Serializable {
         protected String rootDirectory = "\\Объект";
         protected List<String> improper = Arrays.asList("Мнемосхема","__Data","__Event","Отчет~","Журнал~","Тренды~","Рецепт","Окно объекта","Неквитированные сообщения","Активные сообщения","Изображение объекта","Основной журнал");
 
-        protected ArrayList<String> getDirFiles(String path, String name, ArrayList<String> structData){
+        protected LinkedHashSet<String> getDirFilesData(String path, String name, LinkedHashSet<String> structData){
             File folder = new File(path);
             for (File file : Objects.requireNonNull(folder.listFiles())) {
                 if ((file.isDirectory()) && (!improper.contains(file.getName()))) {
                     String curName = name + ((name.equals("")) ? "" : ".") + file.getName();
-                    getDirFiles(file.toString(),curName,structData);
+                    getDirFilesData(file.toString(),curName,structData);
                     structData.add(curName);
                 }
             }
             return structData;
         }
 
-        protected void readDBData(PollerData pollerData) {
+        protected ADatabase.TableModel readDBData() {
             String query = "select data.ITEMID,\"VALUE\",NAME,\"TIME\"\n" +
                     "from MASDATARAW as data\n" +
                     "join MASDATAITEMS as meta\n" +
@@ -207,20 +207,11 @@ public class MasterScada3Project extends AScadaProject implements Serializable {
             }
             ((FirebirdDatabase)database).lastData = lastData;
             ((FirebirdDatabase)database).lastTimestamp = lastTimestamp;
+
+            return data;
         }
 
-
-        @Override
-        public IData perform() {
-            PollerData pollerData = new PollerData();
-
-            //Сбор структуры проекта
-            pollerData.put(STRUCT_DATA_MAPKEY, getDirFiles(fields.get("path") + rootDirectory,"", new ArrayList<>()));
-
-            //Сбор данных базы данных
-            readDBData(pollerData);
-
-            //Сбор бинарных данных
+        protected String takeFrameData() { //todo обрезка изображения от рамок ОС и захват только лишь окна scada-пректа
             String strData = "";
             try {
                 BufferedImage scadaGrab = grabScreen();
@@ -233,9 +224,57 @@ public class MasterScada3Project extends AScadaProject implements Serializable {
             } catch (IOException e) {
                 System.out.println("IO exception" + e);
             }
-            pollerData.put(FRAME_MAPKEY,strData);
+            return strData;
+        }
+
+        protected PollerData setPollerData(ADatabase.TableModel data, LinkedHashSet<String> struct, String frame) {
+            HashMap<String,String> keyMapData = new HashMap<>();
+            HashMap<String,ArrayList<HashMap<String,String>>> valueData = new HashMap<>();
+
+            if (data.getRowCount() != 0) {
+                for (int i = 0; i < data.getRowCount(); i++) {
+                    String id = data.getValueAt(i,"ITEMID").toString();
+                    String name = data.getValueAt(i,"NAME").toString();
+                    String value = data.getValueAt(i,"VALUE").toString();
+                    String date = data.getValueAt(i,"TIME").toString();
+
+                    struct.add(name);
+
+                    //todo возможно стоит избавить от значений, приходящиеся на 1 timestamp
+                    HashMap<String,String> rowData = new HashMap<>();
+                    rowData.put("value",value);
+                    rowData.put("date",date);
+                    if (!valueData.containsKey(id)) {
+                        ArrayList<HashMap<String,String>> rowsData = new ArrayList<>();
+                        rowsData.add(rowData);
+                        valueData.put(id,rowsData);
+                    } else {
+                        ArrayList<HashMap<String,String>> rowsData = valueData.get(id);
+                        rowsData.add(rowData);
+                    }
+
+                    keyMapData.put(id,name);
+                }
+                for (String elem: struct) {
+                    if (!keyMapData.containsValue(elem)) {
+                        String key = "temp_" + new Random().nextInt(100000);
+                        keyMapData.put(key,elem);
+                    }
+                }
+            }
+
+            PollerData pollerData = new PollerData();
+            pollerData.put(STRUCT_DATA_MAPKEY,new ArrayList<>(struct));
+            pollerData.put(VALUES_DATA_MAPKEY,valueData);
+            pollerData.put(KEYS_MAP_DATA_MAPKEY,keyMapData);
+            pollerData.put(FRAME_MAPKEY,frame);
 
             return pollerData;
+        }
+
+        @Override
+        public IData perform() {
+            return setPollerData(readDBData(), getDirFilesData(fields.get("path") + rootDirectory,"", new LinkedHashSet<>()), takeFrameData());
         }
 
         @Override
@@ -262,8 +301,8 @@ public class MasterScada3Project extends AScadaProject implements Serializable {
 
             pocketData.setMetaData(metaData);
             pocketData.setStructData((ArrayList<String>)pollerData.get(STRUCT_DATA_MAPKEY));
-            pocketData.setValuesData(null);
-            pocketData.setKeysMapData(null);
+            pocketData.setValuesData((HashMap<String,ArrayList<HashMap<String,String>>>)pollerData.get(VALUES_DATA_MAPKEY));
+            pocketData.setKeysMapData((HashMap<String,String>)pollerData.get(KEYS_MAP_DATA_MAPKEY));
             pocketData.setBinaryFrame((String)pollerData.get(FRAME_MAPKEY));
 
             return pocketData;

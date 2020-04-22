@@ -59,14 +59,14 @@ public class PocketData implements IData {
         return pocket.structData;
     }
 
-    public PocketData setValuesData(HashMap<String,String> valuesData) {
+    public PocketData setValuesData(HashMap<String,ArrayList<HashMap<String,String>>> valuesData) {
         if ((pocket.header != null) && (pocket.header == DATA)) {
             pocket.valuesData = valuesData;
         }
         return this;
     }
 
-    public HashMap<String, String> getValuesData() {
+    public HashMap<String,ArrayList<HashMap<String,String>>> getValuesData() {
         return pocket.valuesData;
     }
 
@@ -122,7 +122,7 @@ public class PocketData implements IData {
         PocketHeaders header = null;
         ArrayList<String> structData = null;
         HashMap<String,String> metaData = null;
-        HashMap<String,String> valuesData = null;
+        HashMap<String,ArrayList<HashMap<String,String>>> valuesData = null;
         HashMap<String,String> keysMapData = null;
         BinaryScheme binaryData = new BinaryScheme();
 

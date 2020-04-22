@@ -1,23 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7d65a3cc-6250-4fad-a9dd-ebf4f5f58089" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/student/bazhin/data/PollerData.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/student/bazhin/helper/Constants.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/student/bazhin/helper/PocketHeaders.java" afterDir="false" />
+    <list default="true" id="7d65a3cc-6250-4fad-a9dd-ebf4f5f58089" name="Default Changelist" comment="Изменение работы адаптера и дополнение работы ядра">
       <change beforePath="$PROJECT_DIR$/.idea/dictionaries/Fors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/Fors.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/scada.ser" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/student/bazhin/components/Connector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/components/Connector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/student/bazhin/components/scadaProject/AScadaProject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/components/scadaProject/AScadaProject.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/student/bazhin/components/scadaProject/MasterScada3Project.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/components/scadaProject/MasterScada3Project.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/student/bazhin/core/Core.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/core/Core.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/student/bazhin/data/NodeData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/data/NodeData.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/student/bazhin/data/PocketData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/data/PocketData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/student/bazhin/data/ScadaData.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/student/bazhin/databases/ADatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/databases/ADatabase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/student/bazhin/databases/FirebirdDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/databases/FirebirdDatabase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/student/bazhin/factory/scada/ScadaFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/student/bazhin/factory/scada/ScadaFactory.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -118,7 +106,8 @@
       <workItem from="1586990251128" duration="11000" />
       <workItem from="1587286324844" duration="1416000" />
       <workItem from="1587341641432" duration="13033000" />
-      <workItem from="1587455236095" duration="38128000" />
+      <workItem from="1587455236095" duration="38385000" />
+      <workItem from="1587544400289" duration="7643000" />
     </task>
     <task id="LOCAL-00001" summary="Обновление файлов">
       <created>1585596646794</created>
@@ -211,7 +200,14 @@
       <option name="project" value="LOCAL" />
       <updated>1586421706982</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Изменение работы адаптера и дополнение работы ядра">
+      <created>1587516893247</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1587516893247</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -244,7 +240,8 @@
     <MESSAGE value="Добавление работы опрашивателя и преобразователя" />
     <MESSAGE value="Создание пакета, добавлена фабрика БД, базовый класс БД и класс-налседий для СУБД Firebird" />
     <MESSAGE value="Испралвение багов" />
-    <option name="LAST_COMMIT_MESSAGE" value="Испралвение багов" />
+    <MESSAGE value="Изменение работы адаптера и дополнение работы ядра" />
+    <option name="LAST_COMMIT_MESSAGE" value="Изменение работы адаптера и дополнение работы ядра" />
   </component>
   <component name="WindowStateProjectService">
     <state x="552" y="177" key="#Inspections" timestamp="1586303058026">
@@ -303,14 +300,14 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="689" y="382" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1920.1040@0.0.1920.1040" timestamp="1586379194878" />
-    <state x="562" y="113" width="1187" height="813" key="CommitChangelistDialog2" timestamp="1586421701569">
+    <state x="562" y="113" width="1187" height="813" key="CommitChangelistDialog2" timestamp="1587551991457">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="562" y="113" width="1187" height="813" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1586421701569" />
-    <state x="92" y="92" width="1733" height="856" key="DiffContextDialog" timestamp="1587506966818">
+    <state x="562" y="113" width="1187" height="813" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1587551991457" />
+    <state x="92" y="92" width="1733" height="856" key="DiffContextDialog" timestamp="1587545901581">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="92" y="92" width="1733" height="856" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1587506966818" />
+    <state x="92" y="92" width="1733" height="856" key="DiffContextDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1587545901581" />
     <state x="694" y="281" key="EnvironmentVariablesDialog" timestamp="1586365044802">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -319,38 +316,38 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="740" y="274" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1587495994333" />
-    <state width="1876" height="196" key="GridCell.Tab.0.bottom" timestamp="1587516816111">
+    <state width="1876" height="277" key="GridCell.Tab.0.bottom" timestamp="1587551971343">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="196" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1587516816111" />
-    <state width="1876" height="196" key="GridCell.Tab.0.center" timestamp="1587516816111">
+    <state width="1876" height="277" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1587551971343" />
+    <state width="1876" height="277" key="GridCell.Tab.0.center" timestamp="1587551971342">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="196" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1587516816111" />
-    <state width="1876" height="196" key="GridCell.Tab.0.left" timestamp="1587516816111">
+    <state width="1876" height="277" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1587551971342" />
+    <state width="1876" height="277" key="GridCell.Tab.0.left" timestamp="1587551971342">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="196" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1587516816111" />
-    <state width="1876" height="196" key="GridCell.Tab.0.right" timestamp="1587516816111">
+    <state width="1876" height="277" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1587551971342" />
+    <state width="1876" height="277" key="GridCell.Tab.0.right" timestamp="1587551971342">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="196" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1587516816111" />
-    <state width="1876" height="196" key="GridCell.Tab.1.bottom" timestamp="1587516816112">
+    <state width="1876" height="277" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1587551971342" />
+    <state width="1876" height="405" key="GridCell.Tab.1.bottom" timestamp="1587551618329">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="196" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1587516816112" />
-    <state width="1876" height="196" key="GridCell.Tab.1.center" timestamp="1587516816111">
+    <state width="1876" height="405" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1587551618329" />
+    <state width="1876" height="405" key="GridCell.Tab.1.center" timestamp="1587551618329">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="196" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1587516816111" />
-    <state width="1876" height="196" key="GridCell.Tab.1.left" timestamp="1587516816111">
+    <state width="1876" height="405" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1587551618329" />
+    <state width="1876" height="405" key="GridCell.Tab.1.left" timestamp="1587551618328">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="196" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1587516816111" />
-    <state width="1876" height="196" key="GridCell.Tab.1.right" timestamp="1587516816111">
+    <state width="1876" height="405" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1587551618328" />
+    <state width="1876" height="405" key="GridCell.Tab.1.right" timestamp="1587551618329">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1876" height="196" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1587516816111" />
+    <state width="1876" height="405" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1587551618329" />
     <state width="900" height="203" key="GridCell.Tab.2.bottom" timestamp="1586079119749">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -379,10 +376,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="498" height="446" key="SwitcherDM/0.0.1920.1040@0.0.1920.1040" timestamp="1586371387511" />
-    <state x="552" y="252" key="Vcs.Push.Dialog.v2" timestamp="1586421953107">
+    <state x="552" y="252" key="Vcs.Push.Dialog.v2" timestamp="1587516907187">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="552" y="252" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1586421953107" />
+    <state x="552" y="252" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1587516907187" />
     <state x="657" y="295" width="609" height="380" key="com.intellij.ide.util.TipDialog" timestamp="1587457287150">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
