@@ -2,30 +2,31 @@ package student.bazhin.components.scadaProject;
 
 import student.bazhin.core.Core;
 import student.bazhin.data.PocketData;
-import student.bazhin.data.ScadaData;
+import student.bazhin.data.PollerData;
 import student.bazhin.databases.ADatabase;
+import student.bazhin.databases.FirebirdDatabase;
 import student.bazhin.factory.database.DBCFactory;
 import student.bazhin.interfaces.IData;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
+import java.io.*;
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.Rectangle;
-import java.io.IOException;
 import java.awt.AWTException;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import javax.swing.*;
 
-import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static student.bazhin.helper.ActionWithStorage.GET;
+import static student.bazhin.helper.ActionWithStorage.VIEW;
+import static student.bazhin.helper.Constants.*;
+import static student.bazhin.helper.PocketHeaders.DATA;
 
 public class MasterScada3Project extends AScadaProject implements Serializable {
 
@@ -52,6 +53,32 @@ public class MasterScada3Project extends AScadaProject implements Serializable {
         return null;
     }
 
+
+    @Override
+    protected boolean isWorking() {
+        boolean result = true;
+        String path = fields.get("path");
+        File folder = new File(path + "/ErrorLogs");
+        for (File file : Objects.requireNonNull(folder.listFiles())) {
+            result = file.length() == 0;
+        }
+
+        boolean statusBefore = status;
+        if (result) {
+            status = true;
+            if (!statusBefore) {
+                updateScadaProjectList(Core.getInstance().getView());
+            }
+        } else {
+            status = false;
+            if (statusBefore) {
+                updateScadaProjectList(Core.getInstance().getView());
+            }
+            JOptionPane.showMessageDialog(Core.getInstance().getView(), "SCADA-проект не находится в режиме исполнения!");
+        }
+        return result;
+    }
+
     @Override
     public boolean validateScadaData() {
         //проверка наличия всех данных scada проекта
@@ -70,7 +97,17 @@ public class MasterScada3Project extends AScadaProject implements Serializable {
             return false;
         }
         
-        //todo проверка бд
+        //проверка бд
+        if (database != null) {
+            try {
+                String dbName = path + "\\" + fields.get("dataBasePath");
+                database.init(dbName);
+                database.connect();
+            } catch (SQLException | ClassNotFoundException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
 
         return true;
     }
@@ -84,19 +121,7 @@ public class MasterScada3Project extends AScadaProject implements Serializable {
                 return false;
             }
         }
-
-        boolean result = validateScadaData();
-        if (result) {
-            String path = fields.get("path");
-            File folder = new File(path + "/ErrorLogs");
-            for (File file : Objects.requireNonNull(folder.listFiles())) {
-                result = file.length() == 0;
-            }
-            if (!result) {
-                JOptionPane.showMessageDialog(Core.getInstance().getView(), "SCADA-проект не находится в режиме исполнения!");
-            }
-        }
-        return result;
+        return validateScadaData() && isWorking();
     }
 
     @Override
@@ -111,37 +136,89 @@ public class MasterScada3Project extends AScadaProject implements Serializable {
 
     protected class Poller extends APoller {
 
-        //todo В ОПИСАНИЕ АЛГОРИТОМВ
-        protected ArrayList<String> getDirFiles(String path, List<String> improper, String rootFolder, int level) {
+        protected String rootDirectory = "\\Объект";
+        protected List<String> improper = Arrays.asList("Мнемосхема","__Data","__Event","Отчет~","Журнал~","Тренды~","Рецепт","Окно объекта","Неквитированные сообщения","Активные сообщения","Изображение объекта","Основной журнал");
+
+        protected ArrayList<String> getDirFiles(String path, String name, ArrayList<String> structData){
             File folder = new File(path);
-            ArrayList<String> findObjects, curObjects = new ArrayList<>();
             for (File file : Objects.requireNonNull(folder.listFiles())) {
                 if ((file.isDirectory()) && (!improper.contains(file.getName()))) {
-                    if ((level == 0) && (!rootFolder.equals(file.getName()))) {
-                        continue;
+                    String curName = name + ((name.equals("")) ? "" : ".") + file.getName();
+                    getDirFiles(file.toString(),curName,structData);
+                    structData.add(curName);
+                }
+            }
+            return structData;
+        }
+
+        protected void readDBData(PollerData pollerData) {
+            String query = "select data.ITEMID,\"VALUE\",NAME,\"TIME\"\n" +
+                    "from MASDATARAW as data\n" +
+                    "join MASDATAITEMS as meta\n" +
+                    "on data.ITEMID = meta.ITEMID\n" +
+                    "where LAYER = 1\n" +
+                    ((((FirebirdDatabase)database).lastTimestamp.equals("")) ? "" : "and \"TIME\" >= '" + (((FirebirdDatabase)database).lastTimestamp) + "'\n") +
+                    "order by \"TIME\" desc";
+            try {
+                database.connect();
+            } catch (SQLException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            ADatabase.TableModel data = database.getData(query);
+            String lastTimestamp = data.getValueAt(0,"TIME").toString();
+
+            if (
+                (((FirebirdDatabase)database).lastData != null) &&
+                ((((FirebirdDatabase)database).lastData.size() != 0)) &&
+                (data != null) &&
+                (data.getRowCount() != 0)
+            ) {
+                boolean equals;
+                int index = data.getRowCount() - 1;
+                while ((index >= 0) && (data.getValueAt(index,"TIME").toString().equals(lastTimestamp))) {
+                    equals = true;
+                    for (int i = 0; i < ((FirebirdDatabase)database).lastData.size(); i++) {
+                        equals = true;
+                        ArrayList<Object> row = ((FirebirdDatabase)database).lastData.get(i);
+                        for (int j = 0; j < data.getColumnCount(); j++) {
+                            if (!data.getValueAt(index, j).equals(row.get(j))) {
+                                equals = false;
+                            }
+                        }
+                        if (equals) {
+                            break;
+                        }
                     }
-                    findObjects = getDirFiles(file.toString(),improper,rootFolder,++level);
-                    if (findObjects.size() == 0) {
-                        curObjects.add("\"" + file.getName() + "\" : \"\"");
+                    if (equals) {
+                        data.removeRow(index);
+                        index = data.getRowCount() - 1;
                     } else {
-                        curObjects.add("\"" + file.getName() + "\" : { " + String.join(" , ",findObjects) + " }");
+                        index--;
                     }
                 }
             }
-            return curObjects;
+
+            List<ArrayList<Object>> lastData = new ArrayList<>();
+            int i = 0;
+            if ((data.getRowCount() != 0)) {
+                while ((i < data.getRowCount()) && (data.getValueAt(i,"TIME").toString().equals(lastTimestamp))) {
+                    lastData.add(data.getRow(i++));
+                }
+            }
+            ((FirebirdDatabase)database).lastData = lastData;
+            ((FirebirdDatabase)database).lastTimestamp = lastTimestamp;
         }
+
 
         @Override
         public IData perform() {
-            //Сбор структуры
-            int level = 0;
-            List<String> improper = Arrays.asList("Мнемосхема","__Data","__Event","Отчет~","Журнал~","Тренды~","Рецепт","Окно объекта","Неквитированные сообщения","Активные сообщения","Изображение объекта","Основной журнал");
-            String structJsonStr = "\"struct\" : {" + getDirFiles(fields.get("path"),improper,"Объект",0).get(0) + "}";
+            PollerData pollerData = new PollerData();
 
-            //Сбор данных БД
-            String mapJsonStr = "\"map\":[]";
-            String dataJsonStr = "\"data\":[]";
-            readDBData(structJsonStr,mapJsonStr,dataJsonStr);
+            //Сбор структуры проекта
+            pollerData.put(STRUCT_DATA_MAPKEY, getDirFiles(fields.get("path") + rootDirectory,"", new ArrayList<>()));
+
+            //Сбор данных базы данных
+            readDBData(pollerData);
 
             //Сбор бинарных данных
             String strData = "";
@@ -151,52 +228,51 @@ public class MasterScada3Project extends AScadaProject implements Serializable {
                     ByteArrayOutputStream bos = new ByteArrayOutputStream();
                     ImageIO.write(scadaGrab, "jpg", bos);
                     byte[] byteData = bos.toByteArray();
-                    strData = new String(byteData,StandardCharsets.UTF_8);
+                    strData = Base64.getEncoder().encodeToString(byteData);
                 }
             } catch (IOException e) {
                 System.out.println("IO exception" + e);
             }
-            String binJsonStr = "\"bin\" : { \"res\" : {}, \"frame\" : \"" + strData + "\"}";
+            pollerData.put(FRAME_MAPKEY,strData);
 
-            return new ScadaData(structJsonStr,mapJsonStr,dataJsonStr,binJsonStr);
+            return pollerData;
         }
 
-        protected void readDBData(String structJsonStr, String mapJsonStr, String dataJsonStr) {
-            database = null;
+        @Override
+        public IData perform(IData data) {
+            return null;
         }
-
     }
 
     protected class Converter extends AConverter {
 
         @Override
-        public IData perform() {
-            StringBuilder metaJsonStr = new StringBuilder("\"meta\" : {");
-            int count = 0;
-            String comma;
-            for (String key: keys.keySet()){
-                comma = (count == 0) ? "" : ", ";
-                if (Arrays.asList("scadaProjectName","login","password").contains(key)) {
-                    metaJsonStr.append(comma).append("\"").append(key).append("\"").append(" : ").append("\"").append(fields.get(key)).append("\"");
-                    count++;
-                }
-            }
-            metaJsonStr.append(", \"scadaId\" : \"").append(id).append("\" ");
-            metaJsonStr.append(", \"nodeId\" : \"").append(Core.getInstance().getNodeId()).append("\" ");
-            metaJsonStr.append(", \"timestamp\" : \"").append(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date())).append("\" ");
-            metaJsonStr.append("}");
-            scadaData.scadaDataList.add(String.valueOf(metaJsonStr));
+        public IData perform(IData data) {
+            PollerData pollerData = (PollerData)data;
+            PocketData pocketData = new PocketData(DATA);
 
-            StringBuilder pocket = new StringBuilder();
-            pocket.append("{ \"type\" : \"data\"");
-            for (String jsonStr: scadaData.scadaDataList) {
-                pocket.append(", ").append(jsonStr);
-            }
-            pocket.append("}");
+            HashMap<String,String> metaData = new HashMap<>();
+            metaData.put(NODE_ID_MAPKEY,Core.getInstance().getNodeId());
+            metaData.put(LOGIN_MAPKEY,fields.get(LOGIN_FIELD));
+            metaData.put(PASSWORD_MAPKEY,fields.get(PASSWORD_FIELD));
+            metaData.put(SPROJECT_ID_MAPKEY,String.valueOf(id));
+            metaData.put(SPROJECT_NAME_MAPKEY,fields.get(SPROJECT_NAME_FIELD));
+            metaData.put(SCADA_NAME_MAPKEY,scadaName);
+            metaData.put(TIMESTAMP_MAPKEY,new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()));
 
-            return new PocketData(pocket.toString());
+            pocketData.setMetaData(metaData);
+            pocketData.setStructData((ArrayList<String>)pollerData.get(STRUCT_DATA_MAPKEY));
+            pocketData.setValuesData(null);
+            pocketData.setKeysMapData(null);
+            pocketData.setBinaryFrame((String)pollerData.get(FRAME_MAPKEY));
+
+            return pocketData;
         }
 
+        @Override
+        public IData perform() {
+            return null;
+        }
     }
 
 }

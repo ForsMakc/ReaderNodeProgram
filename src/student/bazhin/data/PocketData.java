@@ -1,28 +1,135 @@
 package student.bazhin.data;
 
+import com.google.gson.Gson;
+import student.bazhin.helper.PocketHeaders;
 import student.bazhin.interfaces.IData;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import static student.bazhin.helper.PocketHeaders.DATA;
 
 public class PocketData implements IData {
 
-    protected String scadaData;
+    protected PocketScheme pocket;
     protected String nl = System.getProperty("line.separator");
 
-    public PocketData(String scadaData) {
-        this.scadaData = scadaData + nl;
+    public PocketData() {
+        pocket = new PocketScheme();
     }
 
-    public PocketData add(String s) {
-        scadaData = scadaData + s + nl;
+    public PocketData(PocketHeaders header) {
+        pocket = new PocketScheme();
+        setHeader(header);
+    }
+
+    public PocketData(String jsonPocket) {
+        pocket = new Gson().fromJson(jsonPocket,PocketScheme.class);
+    }
+
+    public PocketData setHeader(PocketHeaders header) {
+        pocket.header = header;
         return this;
     }
 
+    public PocketHeaders getHeader() {
+        return pocket.header;
+    }
+
+    public PocketData setMetaData(HashMap<String,String> metaData) {
+        if (pocket.header != null) {
+            pocket.metaData = metaData;
+        }
+        return this;
+    }
+
+
+    public HashMap<String, String> getMetaData() {
+        return pocket.metaData;
+    }
+
+    public PocketData setStructData(ArrayList<String> structData) {
+        if ((pocket.header != null) && (pocket.header == DATA)) {
+            pocket.structData = structData;
+        }
+        return this;
+    }
+
+    public ArrayList<String> getStructData() {
+        return pocket.structData;
+    }
+
+    public PocketData setValuesData(HashMap<String,String> valuesData) {
+        if ((pocket.header != null) && (pocket.header == DATA)) {
+            pocket.valuesData = valuesData;
+        }
+        return this;
+    }
+
+    public HashMap<String, String> getValuesData() {
+        return pocket.valuesData;
+    }
+
+    public PocketData setKeysMapData(HashMap<String,String> keysMapData) {
+        if ((pocket.header != null) && (pocket.header == DATA)) {
+            pocket.keysMapData = keysMapData;
+        }
+        return this;
+    }
+
+    public HashMap<String, String> getKeysMapData() {
+        return pocket.keysMapData;
+    }
+
+    public PocketData setBinaryFrame(String frame) {
+        if ((pocket.header != null) && (pocket.header == DATA)) {
+            pocket.binaryData.frame = frame;
+        }
+        return this;
+    }
+
+    public String getBinaryFrame() {
+        return pocket.binaryData.frame;
+    }
+
+    public PocketData setBinaryResources(HashMap<String,String> resources) {
+        if ((pocket.header != null) && (pocket.header == DATA)) {
+            pocket.binaryData.resources = resources;
+        }
+        return this;
+    }
+
+    public HashMap<String,String> getBinaryResources() {
+        return pocket.binaryData.resources;
+    }
+
     public PocketData clear() {
-        scadaData = "";
+        pocket = new PocketScheme();
+        return this;
+    }
+
+    public PocketData setJson(String jsonPocket) {
+        pocket = new Gson().fromJson(jsonPocket,PocketScheme.class);
         return this;
     }
 
     @Override
     public String toString() {
-        return scadaData;
+        return new Gson().toJson(pocket) + nl;
     }
+
+    public class PocketScheme {
+        PocketHeaders header = null;
+        ArrayList<String> structData = null;
+        HashMap<String,String> metaData = null;
+        HashMap<String,String> valuesData = null;
+        HashMap<String,String> keysMapData = null;
+        BinaryScheme binaryData = new BinaryScheme();
+
+        public class BinaryScheme {
+            String frame = null;
+            HashMap<String,String> resources = null;
+        }
+    }
+
 }

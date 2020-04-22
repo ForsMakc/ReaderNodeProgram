@@ -3,10 +3,6 @@ package student.bazhin.core;
 import student.bazhin.components.Connector;
 import student.bazhin.data.NodeData;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-
 public class Core{
 
     protected View view;
@@ -23,7 +19,6 @@ public class Core{
         storage = new Storage();
         connector = new Connector();
         connector.perform();
-        NodeData.getInstance("1234");
     }
 
     public static Core getInstance() {
@@ -48,5 +43,9 @@ public class Core{
 
     public String getNodeId() {
         return NodeData.getInstance().getIdentificationKey();
+    }
+
+    public void setNodeId(String nodeId) {
+        NodeData.getInstance(nodeId);
     }
 }

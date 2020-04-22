@@ -6,12 +6,12 @@ import student.bazhin.factory.scada.MasterScada3Factory;
 public class ScadaFactory {
 
     public static final String[] scadaSystemsList = {
-        "Master Scada 3.x"
+        "MasterScada 3.x"
     };
 
     public static AScadaProject createScadaProject(String scadaSystemName) {
         switch (scadaSystemName) {
-            case "Master Scada 3.x": {
+            case "MasterScada 3.x": {
                 return new MasterScada3Factory().createScadaProject(scadaSystemName);
             }
             default: {

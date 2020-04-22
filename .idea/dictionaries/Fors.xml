@@ -3,8 +3,10 @@
     <words>
       <w>dstorage</w>
       <w>firebird</w>
+      <w>mapkey</w>
       <w>poller</w>
       <w>scada</w>
+      <w>sproject</w>
     </words>
   </dictionary>
 </component>

@@ -9,10 +9,13 @@ import student.bazhin.interfaces.IData;
 import java.io.*;
 import java.net.Socket;
 import java.util.ConcurrentModificationException;
+import java.util.HashMap;
 import java.util.Vector;
 
 import static student.bazhin.helper.ActionWithStorage.CALLBACK;
 import static student.bazhin.helper.ActionWithStorage.GET;
+import static student.bazhin.helper.Constants.NODE_ID_MAPKEY;
+import static student.bazhin.helper.PocketHeaders.*;
 
 public class Connector implements IComponent {
 
@@ -29,7 +32,6 @@ public class Connector implements IComponent {
             Core.getInstance().getView().setConnectionInfo(true);
             startSending();
         }
-//        startSending();
         return null;
     }
 
@@ -55,46 +57,66 @@ public class Connector implements IComponent {
             closeConnection();
             return false;
         }
-        if (clientSocket.isConnected()) {
-            handleInitResponse(sendDataToServer(getInitData()));
+
+        boolean result = false;
+        if ((clientSocket.isConnected()) && (haveConnection())) {
+            PocketData pocketData = new PocketData(INIT);
+            try {
+                String nodeId = Core.getInstance().getNodeId();
+                HashMap<String,String> metaData = new HashMap<>();
+                metaData.put(NODE_ID_MAPKEY,nodeId);
+                pocketData.setMetaData(metaData);
+                result = handleInitResponse(sendDataToServer(pocketData));
+            } catch (NullPointerException e) { //если не получилось взять ключ узла
+                result = handleInitResponse(sendDataToServer(pocketData));
+            }
         }
-        return haveConnection();
+        return haveConnection() && result;
     }
 
     protected boolean haveConnection() {
-        return sendDataToServer(new PocketData("test")) != null;
+        PocketData response = sendDataToServer(new PocketData(TEST));
+        return (response != null) && (response.getHeader() == TEST);
     }
 
-    protected PocketData getInitData() {
-        return new PocketData("Hello!");
-    }
-
-    protected void handleInitResponse(PocketData initResponse) {
-        //todo обработка ответа инициализации сервера
+    protected boolean handleInitResponse(PocketData initResponse) {
+        boolean result = false;
+        switch (initResponse.getHeader()) {
+            case OK: {
+                String nodeId = initResponse.getMetaData().get(NODE_ID_MAPKEY);
+                if (!nodeId.equals("")) {
+                    Core.getInstance().setNodeId(nodeId);
+                }
+                result = true;
+                break;
+            }
+            case FAIL: {
+                closeConnection();
+                result = false;
+                break;
+            }
+        }
+        return result;
     }
 
     protected void startSending() {
         new Thread(() -> {
-//            while (haveConnection()) {
-            while (true) {
+            while (haveConnection()) {
                 try {
                     Core.getInstance().getStorage().actionWithStorage(CALLBACK, () -> {
                         Vector<AScadaProject> scadaProjectsStorage;
                         scadaProjectsStorage = Core.getInstance().getStorage().actionWithStorage(GET,null);
                         for (AScadaProject scadaProject : scadaProjectsStorage) {
-//                            if (haveConnection()) {
-                                PocketData data = (PocketData)scadaProject.perform();
-                                // PocketData response = sendDataToServer(data);
-                                PocketData response = null;
-                                if (data != null) {
-                                    response = sendDataToServer(data.add(" Номер скада проекта: " + scadaProjectsStorage.indexOf(scadaProject)));
-                                }
-                                if (response != null) {
-                                    //todo обработка ответа сервера
-                                }
-//                            } else {
-//                                break;
-//                            }
+                            PocketData response = null;
+                            PocketData data = (PocketData)scadaProject.perform();
+                            if (data != null) {
+                                response = sendDataToServer(data);
+                            }
+                            if (response != null) {
+                                //todo обработка ответа сервера
+                            } else {
+                                break;
+                            }
                         }
                         return null;
                     });
