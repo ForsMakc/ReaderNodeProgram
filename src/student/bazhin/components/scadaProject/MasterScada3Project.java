@@ -24,7 +24,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static student.bazhin.helper.ActionWithStorage.GET;
-import static student.bazhin.helper.ActionWithStorage.VIEW;
 import static student.bazhin.helper.Constants.*;
 import static student.bazhin.helper.PocketHeaders.DATA;
 
@@ -64,18 +63,14 @@ public class MasterScada3Project extends AScadaProject implements Serializable {
         }
 
         boolean statusBefore = status;
-        if (result) {
-            status = true;
-            if (!statusBefore) {
-                updateScadaProjectList(Core.getInstance().getView());
-            }
-        } else {
-            status = false;
-            if (statusBefore) {
-                updateScadaProjectList(Core.getInstance().getView());
-            }
+        if (result != statusBefore) {
+            status = result;
+            updateScadaProjectList(Core.getInstance().getView());
+        }
+        if (!result) {
             JOptionPane.showMessageDialog(Core.getInstance().getView(), "SCADA-проект не находится в режиме исполнения!");
         }
+
         return result;
     }
 
@@ -139,18 +134,6 @@ public class MasterScada3Project extends AScadaProject implements Serializable {
         protected String rootDirectory = "\\Объект";
         protected List<String> improper = Arrays.asList("Мнемосхема","__Data","__Event","Отчет~","Журнал~","Тренды~","Рецепт","Окно объекта","Неквитированные сообщения","Активные сообщения","Изображение объекта","Основной журнал");
 
-        protected LinkedHashSet<String> getDirFilesData(String path, String name, LinkedHashSet<String> structData){
-            File folder = new File(path);
-            for (File file : Objects.requireNonNull(folder.listFiles())) {
-                if ((file.isDirectory()) && (!improper.contains(file.getName()))) {
-                    String curName = name + ((name.equals("")) ? "" : ".") + file.getName();
-                    getDirFilesData(file.toString(),curName,structData);
-                    structData.add(curName);
-                }
-            }
-            return structData;
-        }
-
         protected ADatabase.TableModel readDBData() {
             String query = "select data.ITEMID,\"VALUE\",NAME,\"TIME\"\n" +
                     "from MASDATARAW as data\n" +
@@ -165,7 +148,6 @@ public class MasterScada3Project extends AScadaProject implements Serializable {
                 e.printStackTrace();
             }
             ADatabase.TableModel data = database.getData(query);
-            String lastTimestamp = data.getValueAt(0,"TIME").toString();
 
             if (
                 (((FirebirdDatabase)database).lastData != null) &&
@@ -173,10 +155,9 @@ public class MasterScada3Project extends AScadaProject implements Serializable {
                 (data != null) &&
                 (data.getRowCount() != 0)
             ) {
-                boolean equals;
-                int index = data.getRowCount() - 1;
-                while ((index >= 0) && (data.getValueAt(index,"TIME").toString().equals(lastTimestamp))) {
-                    equals = true;
+                int index = 0;
+                boolean equals = false;
+                while ((index < data.getRowCount()) && (data.getValueAt(index,"TIME").toString().equals(((FirebirdDatabase)database).lastTimestamp))) {
                     for (int i = 0; i < ((FirebirdDatabase)database).lastData.size(); i++) {
                         equals = true;
                         ArrayList<Object> row = ((FirebirdDatabase)database).lastData.get(i);
@@ -191,24 +172,42 @@ public class MasterScada3Project extends AScadaProject implements Serializable {
                     }
                     if (equals) {
                         data.removeRow(index);
-                        index = data.getRowCount() - 1;
                     } else {
-                        index--;
+                        index++;
                     }
                 }
             }
 
-            List<ArrayList<Object>> lastData = new ArrayList<>();
-            int i = 0;
             if ((data.getRowCount() != 0)) {
-                while ((i < data.getRowCount()) && (data.getValueAt(i,"TIME").toString().equals(lastTimestamp))) {
-                    lastData.add(data.getRow(i++));
+                int i = data.getRowCount() - 1;
+                List<ArrayList<Object>> lastData = new ArrayList<>();
+                String lastTimestamp = data.getValueAt(i,"TIME").toString();
+
+                while ((i > 0) && (data.getValueAt(i,"TIME").toString().equals(lastTimestamp))) {
+                    lastData.add(data.getRow(i));
+                    i--;
                 }
+
+                ((FirebirdDatabase)database).lastData = lastData;
+                ((FirebirdDatabase)database).lastTimestamp = lastTimestamp;
+            } else {
+                ((FirebirdDatabase)database).lastData = null;
+                ((FirebirdDatabase)database).lastTimestamp = "";
             }
-            ((FirebirdDatabase)database).lastData = lastData;
-            ((FirebirdDatabase)database).lastTimestamp = lastTimestamp;
 
             return data;
+        }
+
+        protected LinkedHashSet<String> getDirFilesData(String path, String parentName, LinkedHashSet<String> structData){
+            File folder = new File(path);
+            for (File file : Objects.requireNonNull(folder.listFiles())) {
+                if ((file.isDirectory()) && (!improper.contains(file.getName()))) {
+                    String curName = parentName + ((parentName.equals("")) ? "" : ".") + file.getName();
+                    getDirFilesData(file.toString(),curName,structData);
+                    structData.add(curName);
+                }
+            }
+            return structData;
         }
 
         protected String takeFrameData() { //todo обрезка изображения от рамок ОС и захват только лишь окна scada-пректа

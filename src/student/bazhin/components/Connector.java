@@ -71,12 +71,12 @@ public class Connector implements IComponent {
                 result = handleInitResponse(sendDataToServer(pocketData));
             }
         }
-        return haveConnection() && result;
+        return result;
     }
 
     protected boolean haveConnection() {
         PocketData response = sendDataToServer(new PocketData(TEST));
-        return (response != null) && (response.getHeader() == TEST);
+        return (response != null) && (response.getHeader() == OK);
     }
 
     protected boolean handleInitResponse(PocketData initResponse) {
@@ -107,15 +107,14 @@ public class Connector implements IComponent {
                         Vector<AScadaProject> scadaProjectsStorage;
                         scadaProjectsStorage = Core.getInstance().getStorage().actionWithStorage(GET,null);
                         for (AScadaProject scadaProject : scadaProjectsStorage) {
-                            PocketData response = null;
                             PocketData data = (PocketData)scadaProject.perform();
                             if (data != null) {
-                                response = sendDataToServer(data);
-                            }
-                            if (response != null) {
-                                //todo обработка ответа сервера
-                            } else {
-                                break;
+                                PocketData response = sendDataToServer(data);
+                                if (response != null) {
+                                    //todo обработка ответа сервера
+                                } else {
+                                    break;
+                                }
                             }
                         }
                         return null;
