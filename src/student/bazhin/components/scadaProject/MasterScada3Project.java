@@ -6,6 +6,7 @@ import student.bazhin.data.PollerData;
 import student.bazhin.databases.ADatabase;
 import student.bazhin.databases.FirebirdDatabase;
 import student.bazhin.factory.database.DBCFactory;
+import student.bazhin.helper.ScreenCaptor;
 import student.bazhin.interfaces.IData;
 
 import java.io.*;
@@ -43,13 +44,15 @@ public class MasterScada3Project extends AScadaProject implements Serializable {
         edits.put("dataBasePath",new JTextField());
     }
 
+    //todo пробросить исключение при ошибки захвата окна
     protected static BufferedImage grabScreen() {
-        try {
-            return new Robot().createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize())) ;
-        } catch (SecurityException | AWTException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return new ScreenCaptor("MasterSCADA - [Мнемосхема]").capture();
+//        try {
+//            return new Robot().createScreenCapture(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize())) ;
+//        } catch (SecurityException | AWTException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
     }
 
 
@@ -296,7 +299,7 @@ public class MasterScada3Project extends AScadaProject implements Serializable {
             metaData.put(SPROJECT_ID_MAPKEY,String.valueOf(id));
             metaData.put(SPROJECT_NAME_MAPKEY,fields.get(SPROJECT_NAME_FIELD));
             metaData.put(SCADA_NAME_MAPKEY,scadaName);
-            metaData.put(TIMESTAMP_MAPKEY,new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()));
+            metaData.put(TIMESTAMP_MAPKEY,new SimpleDateFormat("yyyy.MM.dd HH.mm.ss").format(new Date()));
 
             pocketData.setMetaData(metaData);
             pocketData.setStructData((ArrayList<String>)pollerData.get(STRUCT_DATA_MAPKEY));

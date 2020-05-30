@@ -1,6 +1,7 @@
 package student.bazhin;
 
 import student.bazhin.core.Core;
+import student.bazhin.helper.ScreenCaptor;
 
 import javax.swing.*;
 import java.awt.*;
